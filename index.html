@@ -4,446 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦐 Ocean Ten - AI Personal Assistant Team</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
-        :root {
-            --primary: #0ea5e9;
-            --primary-dark: #0284c7;
-            --secondary: #8b5cf6;
-            --accent: #f43f5e;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-        }
+        :root { --primary: #06b6d4; --primary-dark: #0891b2; --secondary: #8b5cf6; --accent: #f43f5e; --bg-dark: #030712; --bg-card: #111827; --bg-card-hover: #1f2937; --text-main: #f9fafb; --text-muted: #9ca3af; --success: #10b981; --warning: #f59e0b; --gold: #fbbf24; --gradient-1: linear-gradient(135deg, #06b6d4, #8b5cf6); --gradient-2: linear-gradient(135deg, #f43f5e, #8b5cf6); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Prompt', sans-serif; background: var(--bg-dark); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
-        
-        /* Background */
-        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
-        .bg-animation::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(244, 63, 94, 0.1) 0%, transparent 40%);
-            animation: bgMove 20s ease-in-out infinite;
-        }
-        @keyframes bgMove { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, -5%); } }
-        
-        /* Header */
-        header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
-        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 1rem; }
-        .logo h1 { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-emoji { font-size: 2rem; animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        nav a { color: var(--text-muted); text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.3s ease; font-size: 0.9rem; }
-        nav a:hover, nav a.active { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
-        
-        /* Main */
-        main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        
-        /* Sections */
-        section { margin: 4rem 0; }
-        section h2 { font-size: 2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-        
-        /* Hero */
-        .hero { text-align: center; padding: 4rem 0; }
-        .hero h2 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, var(--text-main), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; justify-content: center; }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem; }
-        .hero-emoji { font-size: 5rem; margin-bottom: 1rem; }
-        
-        /* Cards */
+        body { font-family: 'Prompt', sans-serif; background: var(--bg-dark); color: var(--text-main); line-height: 1.7; min-height: 100vh; overflow-x: hidden; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 1; }
+        header { background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s ease; }
+        header:hover { background: rgba(3, 7, 18, 0.95); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon { width: 48px; height: 48px; background: var(--gradient-1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); } 50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(6, 182, 212, 0.5); } }
+        .logo h1 { font-size: 1.5rem; font-weight: 800; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+        nav { display: flex; gap: 0.5rem; }
+        nav a { color: var(--text-muted); text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 10px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        nav a::after { content: ''; position: absolute; bottom: 4px; left: 50%; width: 0; height: 2px; background: var(--gradient-1); transition: all 0.3s ease; transform: translateX(-50%); }
+        nav a:hover { color: var(--text-main); }
+        nav a:hover::after { width: 60%; }
+        main { max-width: 1400px; margin: 0 auto; padding: 6rem 2rem 2rem; }
+        section { margin: 5rem 0; }
+        section h2 { font-size: 2.2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; position: relative; }
+        section h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(139, 92, 246, 0.3), transparent); }
+        .hero { text-align: center; padding: 4rem 0; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%); pointer-events: none; }
+        .hero-emoji { font-size: 6rem; margin-bottom: 1.5rem; animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .hero h2 { font-size: 4rem; font-weight: 800; margin-bottom: 1rem; justify-content: center; background: linear-gradient(135deg, #fff, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.3rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem; }
+        .hero .tagline { font-size: 1.1rem; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; letter-spacing: 2px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--primary), var(--secondary)); opacity: 0; transition: opacity 0.3s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .card:hover::before { opacity: 1; }
-        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-        .card p { color: var(--text-muted); font-size: 0.9rem; }
-        .card .tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; margin-top: 0.5rem; }
-        .tag-primary { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
-        .tag-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .tag-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        
-        /* Team */
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .team-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; }
-        .team-card:hover { transform: scale(1.02); border-color: var(--primary); }
-        .team-emoji { font-size: 3.5rem; margin-bottom: 1rem; }
-        .team-card h4 { font-size: 1.1rem; margin-bottom: 0.25rem; }
-        .team-card .role { color: var(--primary); font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; }
-        .team-card .desc { color: var(--text-muted); font-size: 0.8rem; }
-        
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; }
-        td { font-size: 0.9rem; }
-        .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.5rem; }
-        .status-active { background: var(--success); box-shadow: 0 0 10px var(--success); }
-        .status-warning { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
-        
-        /* Lists */
+        .card { background: var(--bg-card); border-radius: 20px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-1); transform: scaleX(0); transition: transform 0.4s ease; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4); border-color: rgba(139, 92, 246, 0.3); background: var(--bg-card-hover); }
+        .card:hover::before { transform: scaleX(1); }
+        .card-icon { font-size: 3rem; margin-bottom: 1.25rem; display: inline-block; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; font-weight: 600; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
+        .tag { display: inline-block; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 1rem; letter-spacing: 0.5px; }
+        .tag-primary { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .tag-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .team-card { background: var(--bg-card); border-radius: 20px; padding: 2rem 1.5rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .team-card:hover { transform: scale(1.03); border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15); }
+        .team-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; }
+        .team-card h4 { font-size: 1.15rem; margin-bottom: 0.35rem; }
+        .team-card .role { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; display: block; }
+        .team-card .desc { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; margin: 1.5rem 0; }
+        th { padding: 1rem 1.25rem; text-align: left; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1.25rem; background: var(--bg-card); border-top: 1px solid rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255, 255, 255, 0.03); font-size: 0.9rem; }
+        tr td:first-child { border-left: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px 0 0 12px; }
+        tr td:last-child { border-right: 1px solid rgba(255, 255, 255, 0.03); border-radius: 0 12px 12px 0; }
+        tr:hover td { background: var(--bg-card-hover); }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.75rem; animation: glow 2s ease-in-out infinite; }
+        @keyframes glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .status-active { background: var(--success); box-shadow: 0 0 12px var(--success); }
+        .status-warning { background: var(--warning); box-shadow: 0 0 12px var(--warning); }
         ul { list-style: none; }
-        li { padding: 1rem; margin-bottom: 0.5rem; background: var(--bg-card); border-radius: 8px; border-left: 3px solid var(--accent); }
-        li strong { color: var(--accent); }
-        
-        /* Code */
-        pre { background: #0d1117; padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-        
-        /* Footer */
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 4rem; }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h2 { font-size: 2rem; }
-            nav { display: none; }
-            .grid, .team-grid { grid-template-columns: 1fr; }
-        }
+        li { padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; background: var(--bg-card); border-radius: 12px; border-left: 4px solid var(--accent); transition: all 0.3s ease; }
+        li:hover { background: var(--bg-card-hover); transform: translateX(5px); }
+        li strong { color: var(--accent); font-size: 1.05rem; }
+        footer { text-align: center; padding: 3rem 2rem; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 5rem; background: rgba(0, 0, 0, 0.3); }
+        footer p { margin: 0.5rem 0; }
+        @media (max-width: 768px) { .hero h2 { font-size: 2.5rem; } nav { display: none; } .grid, .team-grid { grid-template-columns: 1fr; } section h2 { font-size: 1.75rem; } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-    
-    <header>
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-emoji">🦐</span>
-                <h1>Ocean Ten</h1>
+    <div id="particles-js"></div>
+    <div class="content-wrapper">
+        <header>
+            <div class="header-content">
+                <div class="logo"><div class="logo-icon">🦐</div><h1>Ocean Ten</h1></div>
+                <nav><a href="#about">เกี่ยวกับ</a><a href="#team">ทีม</a><a href="#schedule">ตารางงาน</a><a href="#rules">กฎ</a><a href="#services">Services</a><a href="#knowledge">ความรู้</a></nav>
             </div>
-            <nav>
-                <a href="#about">เกี่ยวกับ</a>
-                <a href="#team">ทีม</a>
-                <a href="#schedule">ตารางงาน</a>
-                <a href="#rules">กฎ</a>
-                <a href="#services">Services</a>
-                <a href="#knowledge">ความรู้</a>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero -->
-        <section class="hero" id="about">
-            <div class="hero-emoji">🌊</div>
-            <h2>Ocean Ten</h2>
-            <p>ทีม AI Personal Assistant ที่คิดแทนคุณ วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p>
-            <p style="color: var(--primary);">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p>
-        </section>
-
-        <!-- CEO -->
-        <section>
-            <h2>🦐 เกี่ยวกับ CEO</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-icon">🦐</div>
-                    <h3>น้องกุ้ง (Claw)</h3>
-                    <p>CEO ของทีม Ocean Ten สายหวานแต่เฉียบขาด จัดการทีม 10 ตัวอย่างมืออาชีพ</p>
-                    <span class="tag tag-primary">CEO / Personal Secretary</span>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🧠</div>
-                    <h3>ความฉลาด</h3>
-                    <p>ใช้ Mastermind Framework วิเคราะห์ก่อนตอบ คิดล่วงหน้า นำเสนอทางเลือก</p>
-                    <span class="tag tag-primary">Cognitive Upgrade</span>
-                </div>
-                <div class="card">
-                    <div class="card-icon">⚡</div>
-                    <h3>การส่งมอบ</h3>
-                    <p>รายงานเป็นภาษาไทย 100% กระชับ ได้ใจความ นำไปใช้ตัดสินใจได้จริง</p>
-                    <span class="tag tag-success">No Fluff</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Team Active -->
-        <section id="team">
-            <h2>👥 ทีม Ocean Ten - Active 5</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">ทำงานประจำทุกวัน (จันทร์-ศุกร์)</p>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="team-emoji">🐋</div>
-                    <h4>คุณวาฬ (Whale)</h4>
-                    <div class="role">The Mastermind</div>
-                    <p class="desc">วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง</p>
-                    <span class="tag tag-success">Active</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🦈</div>
-                    <h4>พี่ฉลาม (Shark)</h4>
-                    <div class="role">Trading Analyst</div>
-                    <p class="desc">ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน</p>
-                    <span class="tag tag-success">Active</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🐬</div>
-                    <h4>น้องโลมา (Dolphin)</h4>
-                    <div class="role">Tech Executor</div>
-                    <p class="desc">เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ</p>
-                    <span class="tag tag-success">Active</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🐢</div>
-                    <h4>ลุงเต่า (Turtle)</h4>
-                    <div class="role">Routine Manager</div>
-                    <p class="desc">PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต</p>
-                    <span class="tag tag-success">Active</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🦀</div>
-                    <h4>พี่ปู (Crab)</h4>
-                    <div class="role">System Guard</div>
-                    <p class="desc">Backup ข้อมูล ดูแลความปลอดภัย อัพเดทระบบ</p>
-                    <span class="tag tag-success">Active</span>
-                </div>
-            </div>
-
-            <h2 style="margin-top: 3rem;">💤 ทีม Ocean Ten - Standby 5</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">รอเรียกใช้เฉพาะกิจ</p>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="team-emoji">🦑</div>
-                    <h4>น้องหมึก (Squid)</h4>
-                    <div class="role">Deep Research</div>
-                    <p class="desc">ค้นหาข้อมูลเชิงลึก</p>
-                    <span class="tag tag-warning">Standby</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🐡</div>
-                    <h4>น้องปักเป้า (Pufferfish)</h4>
-                    <div class="role">QA / Reviewer</div>
-                    <p class="desc">ตรวจทานงานชิ้นใหญ่</p>
-                    <span class="tag tag-warning">Standby</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🐙</div>
-                    <h4>พี่หมึกสาย (Octopus)</h4>
-                    <div class="role">Problem Solver</div>
-                    <p class="desc">แก้ปัญหาเฉพาะจุด</p>
-                    <span class="tag tag-warning">Standby</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🐎</div>
-                    <h4>น้องม้าน้ำ (Seahorse)</h4>
-                    <div class="role">Communication</div>
-                    <p class="desc">Email แปลภาษา TTS</p>
-                    <span class="tag tag-warning">Standby</span>
-                </div>
-                <div class="team-card">
-                    <div class="team-emoji">🌟</div>
-                    <h4>คุณปลาดาว (Starfish)</h4>
-                    <div class="role">Browser Automation</div>
-                    <p class="desc">ควบคุม Browser อัตโนมัติ</p>
-                    <span class="tag tag-warning">Standby</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Schedule / Cron -->
-        <section id="schedule">
-            <h2>⏰ ตารางงานอัตโนมัติ (Cron Jobs)</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">ระบบทำงานอัตโนมัติตามเวลาที่กำหนด</p>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>เวลา</th>
-                        <th>งาน</th>
-                        <th>Agent</th>
-                        <th>รายละเอียด</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>07:00</td>
-                        <td>🌫️ PM 2.5 + จราจร</td>
-                        <td>🐢 ลุงเต่า</td>
-                        <td>เช็ค PM 2.5 ศาลายา และสภาพจราจร สำหรับพาลูกไปโรงเรียน</td>
-                    </tr>
-                    <tr>
-                        <td>08:00</td>
-                        <td>📊 Morning Brief</td>
-                        <td>🦈 พี่ฉลาม</td>
-                        <td>สรุปราคาทอง XAU/USD + เศรษฐกิจไทย/ต่างประเทศ</td>
-                    </tr>
-                    <tr>
-                        <td>09:00</td>
-                        <td>💡 Mastermind Propose</td>
-                        <td>🐋 คุณวาฬ</td>
-                        <td>เสนอแผนงานวันนี้ ไอเดียเทรด และไอเดียพัฒนาระบบ</td>
-                    </tr>
-                    <tr>
-                        <td>14:00</td>
-                        <td>🚗 รับลูก</td>
-                        <td>🐢 ลุงเต่า</td>
-                        <td>เช็คจราจรและสภาพอากาศ สำหรับไปรับลูก</td>
-                    </tr>
-                    <tr>
-                        <td>18:00</td>
-                        <td>📈 Evening Brief</td>
-                        <td>🦈 พี่ฉลาม</td>
-                        <td>สรุปข่าวค่ำและสถานการณ์ตลาด</td>
-                    </tr>
-                    <tr>
-                        <td>21:00</td>
-                        <td>🌙 Night Brief</td>
-                        <td>🦈 พี่ฉลาม</td>
-                        <td>สรุปตลาด US Market และ Gold Futures</td>
-                    </tr>
-                    <tr>
-                        <td>23:00</td>
-                        <td>💾 System Backup</td>
-                        <td>🦀 พี่ปู</td>
-                        <td>Backup ข้อมูลอัตโนมัติและ Healthcheck</td>
-                    </tr>
-                    <tr>
-                        <td>เสาร์ 10:00</td>
-                        <td>🔧 System Update</td>
-                        <td>🐙 + 🦀</td>
-                        <td>อัพเดท OpenClaw และ Skills ทั้งหมด</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Rules -->
-        <section id="rules">
-            <h2>⚡ กฎเหล็ก (Operating Rules)</h2>
-            <ul>
-                <li>
-                    <strong>Rule #0: ห้ามเงียบเด็ดขาด!</strong><br>
-                    เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที ถ้าเงียบ = ทำงานไม่เสร็จ
-                </li>
-                <li>
-                    <strong>ภาษาไทย 100%</strong><br>
-                    ทุกรายงาน ทุกเอกสาร ต้องเป็นภาษาไทยเท่านั้น
-                </li>
-                <li>
-                    <strong>No Fluff</strong><br>
-                    ห้ามน้ำท่วมทุ่ง สรุปกระชับ นำไปใช้ตัดสินใจได้จริง
-                </li>
-                <li>
-                    <strong>ความถูกต้อง</strong><br>
-                    ถ้าข้อมูลไม่เจอ ต้องบอกว่าไม่เจอ ห้ามมั่วหรือเดาข้อมูล
-                </li>
-                <li>
-                    <strong>Proactive Thinking</strong><br>
-                    ไม่ใช่แค่ตอบคำถาม แต่ต้องวิเคราะห์ผลที่ตามมาและเสนอทางเลือก
-                </li>
-            </ul>
-        </section>
-
-        <!-- Services -->
-        <section id="services">
-            <h2>🔧 Services & Tools</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>🤖 OpenClaw</td><td>AI Assistant Platform</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>🧠 MiniMax M2.5</td><td>Primary AI Model (with Cognitive Upgrade)</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>📊 FMP</td><td>Financial Data API (Starter Plan)</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>🔍 Brave Search</td><td>Web Search (Monthly Reset)</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>🔍 Tavily AI</td><td>AI-Optimized Search</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>📧 Google Workspace</td><td>Gmail, Calendar, Drive, Sheets</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>💬 Discord</td><td>Primary Channel</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>📱 LINE OA</td><td>LINE Official Account</td><td><span class="status-dot status-warning"></span>Config Issues</td></tr>
-                    <tr><td>📈 Yahoo Finance</td><td>Gold Price Data (Free)</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>🌤️ Weather API</td><td>wttr.in / Open-Meteo</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                    <tr><td>🌫️ PM2.5 API</td><td>AQICN</td><td><span class="status-dot status-active"></span>Active</td></tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Knowledge -->
-        <section id="knowledge">
-            <h2>🧠 Knowledge Base</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-icon">📈</div>
-                    <h3>Trading Knowledge</h3>
-                    <p>ความรู้เกี่ยวกับการเทรดทองคำ XAU/USD, การวิเคราะห์ทางเทคนิค, ข่าวเศรษฐกิจ</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">💻</div>
-                    <h3>Tech Knowledge</h3>
-                    <p>ความรู้เกี่ยวกับการเขียนโค้ด, Automation, API Integration, Web Development</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">⚙️</div>
-                    <h3>System Knowledge</h3>
-                    <p>ความรู้เกี่ยวกับ OpenClaw, Sub-agents, Cron Jobs, Memory Management</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Workflow -->
-        <section>
-            <h2>🔄 Workflow & Orchestration</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-icon">1️⃣</div>
-                    <h3>รับคำสั่ง</h3>
-                    <p>รับคำสั่งจาก P'Bass ผ่าน Discord</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">2️⃣</div>
-                    <h3>วิเคราะห์</h3>
-                    <p>วิเคราะห์ว่างานนี้ควรมอบหมายให้ Agent ตัวไหน</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">3️⃣</div>
-                    <h3>มอบหมาย</h3>
-                    <p>ส่งต่อให้ Sub-agent ที่เหมาะสม (Spawn Session)</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">4️⃣</div>
-                    <h3>ติดตาม</h3>
-                    <p>รอผลลัพธ์และติดตามความคืบหน้า (Rule #0)</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">5️⃣</div>
-                    <h3>สรุป</h3>
-                    <p>สรุปผลลัพธ์เป็นภาษาไทย กระชับ ให้ P'Bass</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">6️⃣</div>
-                    <h3>จดจำ</h3>
-                    <p>บันทึกลง Memory สำหรับการเรียนรู้ในอนาคต</p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>🦐 Ocean Ten - AI Personal Assistant Team</p>
-        <p>Created: 2026-03-11 | Last Updated: <span id="lastUpdate"></span></p>
-        <p style="margin-top: 0.5rem; opacity: 0.5;">Powered by MiniMax M2.5 with Cognitive Upgrade</p>
-    </footer>
-
-    <script>
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-        
-        // Smooth scroll
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-    </script>
+        </header>
+        <main>
+            <section class="hero" id="about"><div class="hero-emoji">🌊</div><h2>Ocean Ten</h2><p>ทีม AI Personal Assistant ที่คิดแทนคุณ วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p><p class="tagline">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p></section>
+            <section><h2>🦐 เกี่ยวกับ CEO</h2><div class="grid"><div class="card"><i class="fas fa-crown card-icon"></i><h3>น้องกุ้ง (Claw)</h3><p>CEO ของทีม Ocean Ten สายหวานแต่เฉียบขาด จัดการทีม 10 ตัวอย่างมืออาชีพ</p><span class="tag tag-primary">CEO / Personal Secretary</span></div><div class="card"><i class="fas fa-brain card-icon"></i><h3>ความฉลาด</h3><p>ใช้ Mastermind Framework วิเคราะห์ก่อนตอบ คิดล่วงหน้า นำเสนอทางเลือก</p><span class="tag tag-primary">Cognitive Upgrade</span></div><div class="card"><i class="fas fa-bolt card-icon"></i><h3>การส่งมอบ</h3><p>รายงานเป็นภาษาไทย 100% กระชับ ได้ใจความ นำไปใช้ตัดสินใจได้จริง</p><span class="tag tag-success">No Fluff</span></div></div></section>
+            <section id="team"><h2>👥 ทีม Ocean Ten - Active 5</h2><p style="color: var(--text-muted); margin-bottom: 1.5rem;">ทำงานประจำทุกวัน (จันทร์-ศุกร์)</p><div class="team-grid"><div class="team-card"><span class="team-emoji">🐋</span><h4>คุณวาฬ (Whale)</h4><span class="role">The Mastermind</span><p class="desc">วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🦈</span><h4>พี่ฉลาม (Shark)</h4><span class="role">Trading Analyst</span><p class="desc">ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🐬</span><h4>น้องโลมา (Dolphin)</h4><span class="role">Tech Executor</span><p class="desc">เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🐢</span><h4>ลุงเต่า (Turtle)</h4><span class="role">Routine Manager</span><p class="desc">PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🦀</span><h4>พี่ปู (Crab)</h4><span class="role">System Guard</span><p class="desc">Backup ข้อมูล ดูแลความปลอดภัย อัพเดทระบบ</p><span class="tag tag-success">Active</span></div></div><h2 style="margin-top: 3rem;">💤 ทีม Ocean Ten - Standby 5</h2><p style="color: var(--text-muted); margin-bottom: 1.5rem;">รอเรียกใช้เฉพาะกิจ</p><div class="team-grid"><div class="team-card"><span class="team-emoji">🦑</span><h4>น้องหมึก (Squid)</h4><span class="role">Deep Research</span><p class="desc">ค้นหาข้อมูลเชิงลึก</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐡</span><h4>น้องปักเป้า (Pufferfish)</h4><span class="role">QA / Reviewer</span><p class="desc">ตรวจทานงานชิ้นใหญ่</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐙</span><h4>พี่หมึกสาย (Octopus)</h4><span class="role">Problem Solver</span><p class="desc">แก้ปัญหาเฉพาะจุด</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐎</span><h4>น้องม้าน้ำ (Seahorse)</h4><span class="role">Communication</span><p class="desc">Email แปลภาษา TTS</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🌟</span><h4>คุณปลาดาว (Starfish)</h4><span class="role">Browser Automation</span><p class="desc">ควบคุม Browser อัตโนมัติ</p><span class="tag tag-warning">Standby</span></div></div></section>
+            <section id="schedule"><h2>⏰ ตารางงานอัตโนมัติ (Cron Jobs)</h2><p style="color: var(--text-muted); margin-bottom: 1.5rem;">ระบบทำงานอัตโนมัติตามเวลาที่กำหนด</p><table><thead><tr><th>เวลา</th><th>งาน</th><th>Agent</th><th>รายละเอียด</th></tr></thead><tbody><tr><td>07:00</td><td>🌫️ PM 2.5 + จราจร</td><td>🐢 ลุงเต่า</td><td>เช็ค PM 2.5 ศาลายาและสภาพจราจร สำหรับพาลูกไปโรงเรียน</td></tr><tr><td>08:00</td><td>📊 Morning Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปราคาทอง XAU/USD + เศรษฐกิจไทย/ต่างประเทศ</td></tr><tr><td>09:00</td><td>💡 Mastermind Propose</td><td>🐋 คุณวาฬ</td><td>เสนอแผนงานวันนี้ ไอเดียเทรดและไอเดียพัฒนาระบบ</td></tr><tr><td>14:00</td><td>🚗 รับลูก</td><td>🐢 ลุงเต่า</td><td>เช็คจราจรและสภาพอากาศ สำหรับไปรับลูก</td></tr><tr><td>18:00</td><td>📈 Evening Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปข่าวค่ำและสถานการณ์ตลาด</td></tr><tr><td>21:00</td><td>🌙 Night Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปตลาด US Market และ Gold Futures</td></tr><tr><td>23:00</td><td>💾 System Backup</td><td>🦀 พี่ปู</td><td>Backup ข้อมูลอัตโนมัติและ Healthcheck</td></tr><tr><td>เสาร์ 10:00</td><td>🔧 System Update</td><td>🐙 + 🦀</td><td>อัพเดท OpenClaw และ Skills ทั้งหมด</td></tr></tbody></table></section>
+            <section id="rules"><h2>⚡ กฎเหล็ก (Operating Rules)</h2><ul><li><strong>Rule #0: ห้ามเงียบเด็ดขาด!</strong><br>เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที ถ้าเงียบ = ทำงานไม่เสร็จ</li><li><strong>ภาษาไทย 100%</strong><br>ทุกรายงาน ทุกเอกสาร ต้องเป็นภาษาไทยเท่านั้น</li><li><strong>No Fluff</strong><br>ห้ามน้ำท่วมทุ่ง สรุปกระชับ นำไปใช้ตัดสินใจได้จริง</li><li><strong>ความถูกต้อง</strong><br>ถ้าข้อมูลไม่เจอ ต้องบอกว่าไม่เจอ ห้ามมั่วหรือเดาข้อมูล</li><li><strong>Proactive Thinking</strong><br>ไม่ใช่แค่ตอบคำถาม แต่ต้องวิเคราะห์ผลที่ตามมาและเสนอทางเลือก</li></ul></section>
+            <section id="services"><h2>🔧 Services & Tools</h2><table><thead><tr><th>Service</th><th>Description</th><th>Status</th></tr></thead><tbody><tr><td><i class="fas fa-robot"></i> OpenClaw</td><td>AI Assistant Platform</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-microchip"></i> MiniMax M2.5</td><td>Primary AI Model (with Cognitive Upgrade)</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-chart-line"></i> FMP</td><td>Financial Data API (Starter Plan)</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-search"></i> Brave Search</td><td>Web Search (Monthly Reset)</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-searchengin"></i> Tavily AI</td><td>AI-Optimized Search</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-envelope"></i> Google Workspace</td><td>Gmail, Calendar, Drive, Sheets</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fab fa-discord"></i> Discord</td><td>Primary Channel</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fab fa-line"></i> LINE OA</td><td>LINE Official Account</td><td><span class="status-dot status-warning"></span>Config Issues</td></tr><tr><td><i class="fas fa-coins"></i> Yahoo Finance</td><td>Gold Price Data (Free)</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-cloud-sun"></i> Weather API</td><td>wttr.in / Open-Meteo</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-wind"></i> PM2.5 API</td><td>AQICN</td><td><span class="status-dot status-active"></span>Active</td></tr></tbody></table></section>
+            <section id="knowledge"><h2>🧠 Knowledge Base</h2><div class="grid"><div class="card"><i class="fas fa-chart-line card-icon"></i><h3>Trading Knowledge</h3><p>ความรู้เกี่ยวกับการเทรดทองคำ XAU/USD, การวิเคราะห์ทางเทคนิค, ข่าวเศรษฐกิจ</p></div><div class="card"><i class="fas fa-code card-icon"></i><h3>Tech Knowledge</h3><p>ความรู้เกี่ยวกับการเขียนโค้ด, Automation, API Integration, Web Development</p></div><div class="card"><i class="fas fa-cogs card-icon"></i><h3>System Knowledge</h3><p>ความรู้เกี่ยวกับ OpenClaw, Sub-agents, Cron Jobs, Memory Management</p></div></div></section>
+            <section><h2>🔄 Workflow & Orchestration</h2><div class="grid"><div class="card"><i class="fas fa-inbox card-icon"></i><h3>1. รับคำสั่ง</h3><p>รับคำสั่งจาก P'Bass ผ่าน Discord</p></div><div class="card"><i class="fas fa-microscope card-icon"></i><h3>2. วิเคราะห์</h3><p>วิเคราะห์ว่างานนี้ควรมอบหมายให้ Agent ตัวไหน</p></div><div class="card"><i class="fas fa-paper-plane card-icon"></i><h3>3. มอบหมาย</h3><p>ส่งต่อให้ Sub-agent ที่เหมาะสม (Spawn Session)</p></div><div class="card"><i class="fas fa-eye card-icon"></i><h3>4. ติดตาม</h3><p>รอผลลัพธ์และติดตามความคืบหน้า (Rule #0)</p></div><div class="card"><i class="fas fa-file-contract card-icon"></i><h3>5. สรุป</h3><p>สรุปผลลัพธ์เป็นภาษาไทย กระชับ ให้ P'Bass</p></div><div class="card"><i class="fas fa-memory card-icon"></i><h3>6. จดจำ</h3><p>บันทึกลง Memory สำหรับการเรียนรู้ในอนาคต</p></div></div></section>
+        </main>
+        <footer><p>🦐 Ocean Ten - AI Personal Assistant Team</p><p>Created: 2026-03-11 | Last Updated: <span id="lastUpdate"></span></p><p style="margin-top: 0.5rem; opacity: 0.5;">Powered by MiniMax M2.5 with Cognitive Upgrade</p></footer>
+    </div>
+    <script>document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });</script>
 </body>
 </html>
