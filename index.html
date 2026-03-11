@@ -4,1105 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦐 Ocean Ten - AI Personal Assistant Team</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
-            /* Premium Ocean Palette - Deep Sea Theme */
-            --ocean-deep: #050b14;
-            --ocean-mid: #0a192f;
-            --ocean-light: #112240;
-            --ocean-accent: #64ffda;
-            --ocean-glow: #00b4d8;
-            --coral: #ff6b6b;
-            --gold: #ffd93d;
-            --amethyst: #a855f7;
-            --emerald: #10b981;
-            
-            /* Gradients */
-            --gradient-ocean: linear-gradient(135deg, #64ffda 0%, #00b4d8 100%);
-            --gradient-card: linear-gradient(145deg, rgba(17, 34, 64, 0.7), rgba(10, 25, 47, 0.9));
-            --gradient-text: linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%);
-            --gradient-glow: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
-            
-            /* Shadows */
-            --shadow-glow: 0 0 30px rgba(100, 255, 218, 0.15);
-            --shadow-card: 0 20px 40px -15px rgba(2, 12, 27, 0.7);
-            
-            /* Animation */
-            --ease-premium: cubic-bezier(0.23, 1, 0.32, 1);
-            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Loading Screen */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--ocean-deep);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.8s var(--ease-premium), visibility 0.8s;
-        }
-
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-emoji {
-            font-size: 5rem;
-            animation: float 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(100, 255, 218, 0.4));
-        }
-
-        .loader-bar {
-            width: 200px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            margin-top: 2rem;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loader-progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: var(--gradient-ocean);
-            border-radius: 3px;
-            animation: loadProgress 1.5s var(--ease-premium) forwards;
-            box-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--ocean-deep);
-            color: #8892b0;
-            line-height: 1.7;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            color: #ccd6f6;
-            font-weight: 700;
-        }
-
-        /* Animated Background */
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 10% 20%, rgba(100, 255, 218, 0.05) 0%, transparent 40%),
-                radial-gradient(ellipse at 90% 80%, rgba(0, 180, 216, 0.05) 0%, transparent 40%);
-            z-index: 0;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Premium Header */
-        header {
-            background: rgba(5, 11, 20, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(100, 255, 218, 0.05);
-            padding: 1.2rem 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            transition: all 0.4s var(--ease-premium);
-        }
-
-        header.scrolled {
-            padding: 0.8rem 0;
-            background: rgba(5, 11, 20, 0.9);
-            box-shadow: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .logo-icon {
-            width: 44px;
-            height: 44px;
-            background: rgba(100, 255, 218, 0.05);
-            border: 1px solid rgba(100, 255, 218, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s var(--ease-bounce);
-        }
-
-        .logo:hover .logo-icon {
-            transform: translateY(-2px) scale(1.05);
-            background: rgba(100, 255, 218, 0.1);
-            border-color: var(--ocean-accent);
-            box-shadow: 0 0 20px rgba(100, 255, 218, 0.2);
-        }
-
-        .logo h1 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #e6f1ff;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
-        }
-
-        .logo:hover h1 {
-            color: var(--ocean-accent);
-        }
-
-        /* Navigation */
-        nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        nav a {
-            color: #ccd6f6;
-            text-decoration: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s var(--ease-premium);
-            position: relative;
-        }
-
-        nav a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--ocean-accent);
-            transition: all 0.3s var(--ease-premium);
-            transform: translateX(-50%);
-            opacity: 0;
-        }
-
-        nav a:hover {
-            color: var(--ocean-accent);
-            background: rgba(100, 255, 218, 0.05);
-        }
-
-        nav a:hover::before {
-            width: 80%;
-            opacity: 1;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 8rem 2rem 2rem;
-        }
-
-        section {
-            margin: 8rem 0;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s var(--ease-premium);
-        }
-
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        section h2 {
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            position: relative;
-        }
-
-        section h2::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--gradient-glow);
-        }
-        
-        section h2 .section-number {
-            color: var(--ocean-accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.2rem;
-            font-weight: 400;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: left;
-            padding: 4rem 0 6rem;
-            position: relative;
-            max-width: 800px;
-        }
-
-        .hero-intro {
-            color: var(--ocean-accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .hero h2 {
-            font-size: 4.5rem;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            color: #ccd6f6;
-        }
-        
-        .hero h2::after {
-            display: none;
-        }
-
-        .hero h2 span {
-            color: #8892b0;
-            display: block;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 540px;
-            margin-top: 1.5rem;
-            margin-bottom: 3rem;
-            color: #8892b0;
-        }
-
-        .hero-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: transparent;
-            color: var(--ocean-accent);
-            border: 1px solid var(--ocean-accent);
-            padding: 1rem 1.75rem;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s var(--ease-premium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--ocean-accent);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: -1;
-        }
-
-        .hero-btn:hover {
-            color: var(--ocean-deep);
-            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-            transform: translateY(-3px);
-        }
-
-        .hero-btn:hover::before {
-            opacity: 1;
-        }
-
-        /* Premium Cards Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--gradient-card);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            border: 1px solid rgba(100, 255, 218, 0.05);
-            transition: all 0.4s var(--ease-premium);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(100, 255, 218, 0.02);
-            opacity: 0;
-            transition: opacity 0.4s;
-            z-index: -1;
-        }
-        
-        .card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gradient-ocean);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s var(--ease-premium);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(100, 255, 218, 0.2);
-            box-shadow: var(--shadow-card);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card:hover::after {
-            transform: scaleX(1);
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--ocean-accent);
-            display: inline-block;
-            transition: transform 0.4s var(--ease-bounce);
-        }
-
-        .card:hover .card-icon {
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #e6f1ff;
-        }
-
-        .card p {
-            color: #8892b0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Tags */
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--ocean-accent);
-            background: rgba(100, 255, 218, 0.1);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-
-        .tag:hover {
-            background: rgba(100, 255, 218, 0.2);
-        }
-
-        /* Team Grid */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .team-card {
-            background: var(--ocean-light);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            border: 1px solid transparent;
-            transition: all 0.4s var(--ease-premium);
-            position: relative;
-        }
-
-        .team-card:hover {
-            transform: translateY(-5px);
-            background: var(--ocean-mid);
-            border-color: rgba(100, 255, 218, 0.3);
-            box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
-        }
-
-        .team-emoji {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            transition: transform 0.4s var(--ease-bounce);
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
-        }
-
-        .team-card:hover .team-emoji {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .team-card h4 {
-            font-size: 1.1rem;
-            color: #e6f1ff;
-            margin-bottom: 0.3rem;
-        }
-
-        .team-card .role {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--ocean-accent);
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .team-card .desc {
-            color: #8892b0;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .status-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .status-active {
-            background: var(--emerald);
-            box-shadow: 0 0 10px var(--emerald);
-        }
-
-        .status-standby {
-            background: var(--gold);
-            box-shadow: 0 0 10px var(--gold);
-        }
-
-        /* Lists */
-        .rules-list {
-            list-style: none;
-            display: grid;
-            gap: 1rem;
-        }
-
-        .rules-list li {
-            padding: 1.5rem 2rem;
-            background: var(--ocean-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-            transition: all 0.3s var(--ease-premium);
-            border: 1px solid transparent;
-        }
-
-        .rules-list li:hover {
-            transform: translateX(10px);
-            background: var(--ocean-mid);
-            border-color: rgba(100, 255, 218, 0.1);
-        }
-
-        .rule-icon {
-            color: var(--ocean-accent);
-            font-size: 1.5rem;
-            margin-top: 0.2rem;
-        }
-
-        .rule-content h4 {
-            color: #e6f1ff;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .rule-content p {
-            color: #8892b0;
-            font-size: 0.95rem;
-            margin: 0;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            background: var(--ocean-light);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th {
-            padding: 1.25rem 1.5rem;
-            color: #ccd6f6;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-            background: rgba(2, 12, 27, 0.3);
-        }
-
-        td {
-            padding: 1.25rem 1.5rem;
-            color: #8892b0;
-            font-size: 0.95rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: rgba(100, 255, 218, 0.03);
-            color: #ccd6f6;
-        }
-        
-        .service-name {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: #e6f1ff;
-            font-weight: 500;
-        }
-        
-        .service-icon {
-            color: var(--ocean-accent);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 4rem 2rem 2rem;
-            margin-top: 6rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #8892b0;
-        }
-
-        footer p {
-            margin: 0.5rem 0;
-        }
-        
-        .terminal-text {
-            color: var(--ocean-accent);
-            opacity: 0.7;
-            margin-top: 1rem !important;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h2 { font-size: 3rem; }
-            .hero h2 span { font-size: 2.5rem; }
-            nav { display: none; }
-            section h2 { font-size: 1.5rem; }
-            .grid, .team-grid { grid-template-columns: 1fr; }
-            .hero { padding: 3rem 0 4rem; text-align: center; }
-            .hero p { margin: 1.5rem auto 2.5rem; }
-            .rules-list li { padding: 1.25rem; flex-direction: column; gap: 1rem; }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+            --ocean-deep: #0a0e17;
+            --ocean-mid: #0d1929;
+            --ocean-light: #132743;
+            --cyan: #00d4ff;
+            --cyan-glow: rgba(0, 212, 255, 0.4);
+            --purple: #a855f7;
+            --purple-glow: rgba(168, 85, 247, 0.4);
+            --pink: #ec4899;
+            --gold: #fbbf24;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --gradient-ocean: linear-gradient(135deg, #00d4ff 0%, #a855f7 50%, #ec4899 100%);
+            --gradient-card: linear-gradient(145deg, rgba(19, 39, 67, 0.8), rgba(13, 25, 41, 0.9));
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', sans-serif; background: var(--ocean-deep); color: var(--text-primary); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+        .ocean-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .ocean-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 60% 40%, rgba(236, 72, 153, 0.1) 0%, transparent 40%); animation: oceanDrift 30s ease-in-out infinite; }
+        @keyframes oceanDrift { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(2%, 2%) rotate(1deg); } 50% { transform: translate(0, 4%) rotate(0deg); } 75% { transform: translate(-2%, 2%) rotate(-1deg); } }
+        .orb { position: absolute; border-radius: 50%; filter: blur(60px); animation: floatOrb 20s ease-in-out infinite; opacity: 0.5; }
+        .orb-1 { width: 400px; height: 400px; background: var(--cyan); top: 10%; left: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: var(--purple); top: 60%; right: -5%; animation-delay: -7s; }
+        .orb-3 { width: 250px; height: 250px; background: var(--pink); bottom: 10%; left: 30%; animation-delay: -14s; }
+        @keyframes floatOrb { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -30px) scale(1.05); } 66% { transform: translate(-20px, 20px) scale(0.95); } }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; background: rgba(10, 14, 23, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); transition: all 0.3s ease; }
+        header:hover { background: rgba(10, 14, 23, 0.95); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon { width: 50px; height: 50px; background: var(--gradient-ocean); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; animation: glowPulse 3s ease-in-out infinite; box-shadow: 0 0 30px var(--cyan-glow); }
+        @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 20px var(--cyan-glow), 0 0 40px rgba(0, 212, 255, 0.2); } 50% { box-shadow: 0 0 40px var(--cyan-glow), 0 0 60px rgba(0, 212, 255, 0.3); } }
+        .logo h1 { font-size: 1.6rem; font-weight: 800; background: var(--gradient-ocean); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+        nav a { color: var(--text-secondary); text-decoration: none; padding: 0.7rem 1.4rem; border-radius: 12px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        nav a::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--gradient-ocean); opacity: 0; transition: all 0.3s ease; z-index: -1; }
+        nav a:hover { color: white; transform: translateY(-2px); }
+        nav a:hover::before { left: 0; opacity: 0.2; }
+        main { max-width: 1400px; margin: 0 auto; padding: 7rem 2rem 3rem; position: relative; z-index: 1; }
+        section { margin: 6rem 0; }
+        section h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; position: relative; }
+        section h2::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg, var(--purple), transparent); min-width: 100px; }
+        .hero { text-align: center; padding: 5rem 0; position: relative; }
+        .hero-emoji { font-size: 7rem; margin-bottom: 1.5rem; animation: bounce 2s ease-in-out infinite; display: inline-block; filter: drop-shadow(0 0 30px var(--cyan-glow)); }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .hero h2 { font-size: 4.5rem; font-weight: 900; margin-bottom: 1.5rem; justify-content: center; background: linear-gradient(135deg, #fff 0%, var(--cyan) 50%, var(--purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: gradientShift 5s ease infinite; }
+        @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .hero p { font-size: 1.4rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 2rem; }
+        .hero .tagline { font-size: 1.2rem; background: var(--gradient-ocean); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .card { background: var(--gradient-card); border-radius: 24px; padding: 2rem; border: 1px solid var(--glass-border); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-ocean); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px var(--cyan-glow); border-color: var(--purple); }
+        .card:hover::before { transform: scaleX(1); }
+        .card-icon { font-size: 3rem; margin-bottom: 1.25rem; display: inline-block; background: var(--gradient-ocean); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: iconFloat 3s ease-in-out infinite; }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .card h3 { font-size: 1.35rem; margin-bottom: 0.75rem; font-weight: 600; }
+        .card p { color: var(--text-secondary); font-size: 0.95rem; }
+        .tag { display: inline-block; padding: 0.4rem 1rem; border-radius: 25px; font-size: 0.75rem; font-weight: 600; margin-top: 1rem; letter-spacing: 0.5px; text-transform: uppercase; }
+        .tag-primary { background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(168, 85, 247, 0.2)); color: var(--cyan); border: 1px solid rgba(0, 212, 255, 0.3); }
+        .tag-success { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 212, 255, 0.2)); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag-warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(236, 72, 153, 0.2)); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .team-card { background: var(--gradient-card); border-radius: 24px; padding: 2rem 1.5rem; text-align: center; border: 1px solid var(--glass-border); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .team-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--gradient-ocean); transform: scaleX(0); transition: transform 0.4s ease; }
+        .team-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--purple); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 30px var(--purple-glow); }
+        .team-card:hover::after { transform: scaleX(1); }
+        .team-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; transition: transform 0.3s ease; }
+        .team-card:hover .team-emoji { transform: scale(1.1); }
+        .team-card h4 { font-size: 1.2rem; margin-bottom: 0.35rem; font-weight: 600; }
+        .team-card .role { background: var(--gradient-ocean); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; display: block; }
+        .team-card .desc { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.5; }
+        .table-container { background: var(--gradient-card); border-radius: 24px; padding: 1.5rem; border: 1px solid var(--glass-border); overflow-x: auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 0.75rem; }
+        th { padding: 1rem 1.5rem; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1.25rem 1.5rem; background: rgba(255, 255, 255, 0.03); font-size: 0.9rem; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        tr td:first-child { border-left: 1px solid var(--glass-border); border-radius: 12px 0 0 12px; }
+        tr td:last-child { border-right: 1px solid var(--glass-border); border-radius: 0 12px 12px 0; }
+        tr:hover td { background: rgba(255, 255, 255, 0.06); }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.75rem; animation: statusGlow 2s ease-in-out infinite; }
+        @keyframes statusGlow { 0%, 100% { opacity: 1; box-shadow: 0 0 8px currentColor; } 50% { opacity: 0.6; box-shadow: 0 0 4px currentColor; } }
+        .status-active { background: var(--success); color: var(--success); }
+        .status-warning { background: var(--warning); color: var(--warning); }
+        ul { list-style: none; }
+        li { padding: 1.5rem; margin-bottom: 1rem; background: var(--gradient-card); border-radius: 16px; border-left: 4px solid; border-image: var(--gradient-ocean) 1; transition: all 0.3s ease; }
+        li:hover { background: rgba(255, 255, 255, 0.08); transform: translateX(8px); }
+        li strong { font-size: 1.1rem; background: var(--gradient-ocean); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        footer { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--glass-border); margin-top: 6rem; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.3)); }
+        footer p { margin: 0.5rem 0; }
+        @media (max-width: 768px) { .hero h2 { font-size: 2.8rem; } nav { display: none; } .grid, .team-grid { grid-template-columns: 1fr; } section h2 { font-size: 1.8rem; } .hero-emoji { font-size: 5rem; } }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--ocean-deep); }
-        ::-webkit-scrollbar-thumb { 
-            background: #495670;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover { 
-            background: var(--ocean-accent);
-        }
-        ::selection { background: rgba(100, 255, 218, 0.2); color: #ccd6f6; }
+        ::-webkit-scrollbar-thumb { background: var(--ocean-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
     </style>
 </head>
 <body>
-    <!-- Premium Loading Screen -->
-    <div class="loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-emoji">🌊</div>
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
-            <div style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; color: var(--ocean-accent); font-size: 0.85rem; letter-spacing: 2px; opacity: 0.8;">INITIALIZING...</div>
-        </div>
+    <div class="ocean-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
     </div>
-
-    <!-- Background -->
-    <div class="bg-gradient"></div>
-    <div id="particles-js"></div>
-    
     <div class="content-wrapper">
-        <header id="header">
+        <header>
             <div class="header-content">
-                <a href="#" class="logo">
-                    <div class="logo-icon">🦐</div>
-                    <h1>Ocean Ten</h1>
-                </a>
-                <nav>
-                    <a href="#about"><span style="color:var(--ocean-accent); margin-right:5px; font-family:'JetBrains Mono';">01.</span>เกี่ยวกับ</a>
-                    <a href="#team"><span style="color:var(--ocean-accent); margin-right:5px; font-family:'JetBrains Mono';">02.</span>ทีม</a>
-                    <a href="#schedule"><span style="color:var(--ocean-accent); margin-right:5px; font-family:'JetBrains Mono';">03.</span>ตารางงาน</a>
-                    <a href="#services"><span style="color:var(--ocean-accent); margin-right:5px; font-family:'JetBrains Mono';">04.</span>ระบบ</a>
-                </nav>
+                <div class="logo"><div class="logo-icon">🦐</div><h1>Ocean Ten</h1></div>
+                <nav><a href="#about">เกี่ยวกับ</a><a href="#team">ทีม</a><a href="#schedule">ตารางงาน</a><a href="#rules">กฎ</a><a href="#services">Services</a><a href="#knowledge">ความรู้</a></nav>
             </div>
         </header>
-        
         <main>
-            <section class="hero visible">
-                <span class="hero-intro">ยินดีต้อนรับสู่ศูนย์กลางสั่งการ</span>
-                <h2>Ocean Ten. <span>คิดแทนคุณ นำเสนอทางเลือก</span></h2>
-                <p>ทีม AI Personal Assistant ระดับพรีเมียมที่ถูกออกแบบมาเพื่อจัดการ วิเคราะห์ และวางแผนล่วงหน้า เพื่อให้คุณตัดสินใจได้ง่ายที่สุด</p>
-                <a href="#team" class="hero-btn">
-                    ทำความรู้จักทีม <i class="fas fa-arrow-right"></i>
-                </a>
-            </section>
-            
-            <section id="about">
-                <h2><span class="section-number">01.</span> ข้อมูลผู้บริหาร</h2>
-                <div class="grid">
-                    <div class="card">
-                        <i class="fas fa-crown card-icon"></i>
-                        <h3>น้องกุ้ง (Claw)</h3>
-                        <p>CEO ของทีม Ocean Ten สายหวานแต่เฉียบขาด ทำหน้าที่เป็นศูนย์กลางรับคำสั่งและบริหารจัดการ Agent ทั้ง 10 ตัวอย่างมืออาชีพ</p>
-                        <div class="tags-container">
-                            <span class="tag">CEO</span>
-                            <span class="tag">Orchestrator</span>
-                            <span class="tag">Sweet but Sharp</span>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <i class="fas fa-brain card-icon"></i>
-                        <h3>Cognitive Upgrade</h3>
-                        <p>ขับเคลื่อนด้วย Mastermind Framework วิเคราะห์ลอจิกก่อนตอบ คิดล่วงหน้า และนำเสนอทางเลือกแทนที่จะรอรับคำสั่งเพียงอย่างเดียว</p>
-                        <div class="tags-container">
-                            <span class="tag">MiniMax M2.5</span>
-                            <span class="tag">Step-by-Step Logic</span>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <i class="fas fa-bolt card-icon"></i>
-                        <h3>Premium Delivery</h3>
-                        <p>รายงานเป็นภาษาไทย 100% กระชับ ได้ใจความแบบ No Fluff ส่งมอบข้อมูลในรูปแบบ Actionable Insights ที่พร้อมใช้งานทันที</p>
-                        <div class="tags-container">
-                            <span class="tag">100% Thai</span>
-                            <span class="tag">No Fluff</span>
-                            <span class="tag">Actionable</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="team">
-                <h2><span class="section-number">02.</span> สมาชิกทีม</h2>
-                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-circle" style="color: var(--emerald); font-size: 0.6rem;"></i> Active 5 <span style="font-size: 0.9rem; color: #8892b0; font-weight: 400; margin-left: 0.5rem;">(ทำงานประจำวัน)</span></h3>
-                
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="status-badge status-active"></div>
-                        <span class="team-emoji">🐋</span>
-                        <h4>คุณวาฬ (Whale)</h4>
-                        <span class="role">The Mastermind</span>
-                        <p class="desc">วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-active"></div>
-                        <span class="team-emoji">🦈</span>
-                        <h4>พี่ฉลาม (Shark)</h4>
-                        <span class="role">Trading Analyst</span>
-                        <p class="desc">ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-active"></div>
-                        <span class="team-emoji">🐬</span>
-                        <h4>น้องโลมา (Dolphin)</h4>
-                        <span class="role">Tech Executor</span>
-                        <p class="desc">เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-active"></div>
-                        <span class="team-emoji">🐢</span>
-                        <h4>ลุงเต่า (Turtle)</h4>
-                        <span class="role">Routine Manager</span>
-                        <p class="desc">ตรวจสอบ PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-active"></div>
-                        <span class="team-emoji">🦀</span>
-                        <h4>พี่ปู (Crab)</h4>
-                        <span class="role">System Guard</span>
-                        <p class="desc">สำรองข้อมูล ดูแลความปลอดภัย อัพเดทระบบ</p>
-                    </div>
-                </div>
-                
-                <h3 style="margin: 3rem 0 1.5rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-circle" style="color: var(--gold); font-size: 0.6rem;"></i> Standby 5 <span style="font-size: 0.9rem; color: #8892b0; font-weight: 400; margin-left: 0.5rem;">(รอเรียกใช้เฉพาะกิจ)</span></h3>
-                
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="status-badge status-standby"></div>
-                        <span class="team-emoji">🦑</span>
-                        <h4>น้องหมึก (Squid)</h4>
-                        <span class="role">Deep Research</span>
-                        <p class="desc">ค้นหาข้อมูลเชิงลึก วิเคราะห์เปรียบเทียบข้อมูล</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-standby"></div>
-                        <span class="team-emoji">🐡</span>
-                        <h4>ปักเป้า (Pufferfish)</h4>
-                        <span class="role">QA / Reviewer</span>
-                        <p class="desc">ตรวจทานงานชิ้นใหญ่ หาข้อผิดพลาด</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-standby"></div>
-                        <span class="team-emoji">🐙</span>
-                        <h4>หมึกสาย (Octopus)</h4>
-                        <span class="role">Problem Solver</span>
-                        <p class="desc">แก้ปัญหาเฉพาะจุด ซ่อมบั๊ก</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-standby"></div>
-                        <span class="team-emoji">🐎</span>
-                        <h4>น้องม้าน้ำ (Seahorse)</h4>
-                        <span class="role">Communication</span>
-                        <p class="desc">จัดการ Email แปลภาษา แปลงข้อความเป็นเสียง</p>
-                    </div>
-                    <div class="team-card">
-                        <div class="status-badge status-standby"></div>
-                        <span class="team-emoji">🌟</span>
-                        <h4>คุณปลาดาว (Starfish)</h4>
-                        <span class="role">Browser Auto</span>
-                        <p class="desc">ควบคุม Browser อัตโนมัติ ดึงข้อมูลหน้าเว็บ</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="schedule">
-                <h2><span class="section-number">03.</span> การปฏิบัติงานอัตโนมัติ</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>TIME</th>
-                                <th>TASK</th>
-                                <th>AGENT</th>
-                                <th>DESCRIPTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">07:00</span></td>
-                                <td>🌫️ ข้อมูลสิ่งแวดล้อม</td>
-                                <td>🐢 ลุงเต่า</td>
-                                <td>เช็ค PM 2.5 ศาลายาและสภาพจราจร สำหรับเตรียมตัวพาลูกไปโรงเรียน</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">08:00</span></td>
-                                <td>📊 Morning Brief</td>
-                                <td>🦈 พี่ฉลาม</td>
-                                <td>สรุปราคาทอง XAU/USD พร้อมข่าวเศรษฐกิจสำคัญช่วงเช้า</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">09:00</span></td>
-                                <td>💡 Strategy Propose</td>
-                                <td>🐋 คุณวาฬ</td>
-                                <td>เสนอแผนงานประจำวัน ไอเดียเทรด และแนวทางพัฒนาระบบ</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">14:00</span></td>
-                                <td>🚗 เตรียมรับลูก</td>
-                                <td>🐢 ลุงเต่า</td>
-                                <td>เช็คสภาพการจราจรแบบ Real-time และสภาพอากาศล่วงหน้า</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">18:00</span></td>
-                                <td>📈 Evening Brief</td>
-                                <td>🦈 พี่ฉลาม</td>
-                                <td>สรุปข่าวค่ำ สถานการณ์ตลาด และแนวโน้มช่วงกลางคืน</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">21:00</span></td>
-                                <td>🌙 US Market</td>
-                                <td>🦈 พี่ฉลาม</td>
-                                <td>รายงานสถานการณ์ US Market และ Gold Futures ตอนเปิดตลาด</td>
-                            </tr>
-                            <tr>
-                                <td><span style="color:var(--ocean-accent); font-family:'JetBrains Mono';">23:00</span></td>
-                                <td>💾 System Backup</td>
-                                <td>🦀 พี่ปู</td>
-                                <td>ทำ Auto Backup และ System Healthcheck ประจำวัน</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-            
-            <section id="rules">
-                <h2><span class="section-number">04.</span> กฎการปฏิบัติงาน (Core Truths)</h2>
-                <ul class="rules-list">
-                    <li>
-                        <div class="rule-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                        <div class="rule-content">
-                            <h4>Rule #0: การตอบสนองทันที</h4>
-                            <p>ห้ามเงียบเด็ดขาด เมื่อได้รับคำสั่งต้องรายงานสถานะทันที เพื่อให้ P'Bass ทราบว่าระบบกำลังดำเนินการ</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="rule-icon"><i class="fas fa-language"></i></div>
-                        <div class="rule-content">
-                            <h4>ภาษาไทย 100% (No Fluff)</h4>
-                            <p>รายงานทุกชิ้นต้องเป็นภาษาไทยที่กระชับ ตรงประเด็น ทรงพลัง ตัดข้อความเยิ่นเย้อออกให้หมด</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="rule-icon"><i class="fas fa-chess-knight"></i></div>
-                        <div class="rule-content">
-                            <h4>Proactive Thinking</h4>
-                            <p>ห้ามตอบด้วยสัญชาตญาณ ต้องเช็คความจริง (Facts) และคิดล่วงหน้าเพื่อเสนอ "ทางเลือก (Options)" เสมอ</p>
-                        </div>
-                    </li>
-                </ul>
-            </section>
-
-            <section id="services">
-                <h2><span class="section-number">05.</span> ระบบและการเชื่อมต่อ</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>SERVICE</th>
-                                <th>FUNCTION</th>
-                                <th>STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><div class="service-name"><i class="fas fa-robot service-icon"></i> OpenClaw</div></td>
-                                <td>Core AI Assistant Platform</td>
-                                <td><span style="color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Online</span></td>
-                            </tr>
-                            <tr>
-                                <td><div class="service-name"><i class="fas fa-microchip service-icon"></i> MiniMax M2.5</div></td>
-                                <td>Primary AI Model with Cognitive Upgrade</td>
-                                <td><span style="color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Online</span></td>
-                            </tr>
-                            <tr>
-                                <td><div class="service-name"><i class="fab fa-discord service-icon"></i> Discord</div></td>
-                                <td>Primary Command Channel</td>
-                                <td><span style="color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Online</span></td>
-                            </tr>
-                            <tr>
-                                <td><div class="service-name"><i class="fas fa-chart-line service-icon"></i> FMP / Yahoo Finance</div></td>
-                                <td>Financial & Gold Price Data</td>
-                                <td><span style="color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Online</span></td>
-                            </tr>
-                            <tr>
-                                <td><div class="service-name"><i class="fas fa-search service-icon"></i> Brave / Tavily</div></td>
-                                <td>Deep Web Search Engine</td>
-                                <td><span style="color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Online</span></td>
-                            </tr>
-                            <tr>
-                                <td><div class="service-name"><i class="fab fa-line service-icon" style="color:#00c300;"></i> LINE OA</div></td>
-                                <td>Notification Channel</td>
-                                <td><span style="color: var(--gold); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;"><i class="fas fa-exclamation-circle"></i> Maintenance</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <section class="hero" id="about"><div class="hero-emoji">🌊</div><h2>Ocean Ten</h2><p>ทีม AI Personal Assistant ที่คิดแทนคุณ วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p><p class="tagline">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p></section>
+            <section><h2>🦐 เกี่ยวกับ CEO</h2><div class="grid"><div class="card"><i class="fas fa-crown card-icon"></i><h3>น้องกุ้ง (Claw)</h3><p>CEO ของทีม Ocean Ten สายหวานแต่เฉียบขาด จัดการทีม 10 ตัวอย่างมืออาชีพ</p><span class="tag tag-primary">CEO / Personal Secretary</span></div><div class="card"><i class="fas fa-brain card-icon"></i><h3>ความฉลาด</h3><p>ใช้ Mastermind Framework วิเคราะห์ก่อนตอบ คิดล่วงหน้า นำเสนอทางเลือก</p><span class="tag tag-primary">Cognitive Upgrade</span></div><div class="card"><i class="fas fa-bolt card-icon"></i><h3>การส่งมอบ</h3><p>รายงานเป็นภาษาไทย 100% กระชับ ได้ใจความ นำไปใช้ตัดสินใจได้จริง</p><span class="tag tag-success">No Fluff</span></div></div></section>
+            <section id="team"><h2>👥 ทีม Ocean Ten - Active 5</h2><p style="color: var(--text-secondary); margin-bottom: 1.5rem;">ทำงานประจำทุกวัน (จันทร์-ศุกร์)</p><div class="team-grid"><div class="team-card"><span class="team-emoji">🐋</span><h4>คุณวาฬ (Whale)</h4><span class="role">The Mastermind</span><p class="desc">วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🦈</span><h4>พี่ฉลาม (Shark)</h4><span class="role">Trading Analyst</span><p class="desc">ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🐬</span><h4>น้องโลมา (Dolphin)</h4><span class="role">Tech Executor</span><p class="desc">เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🐢</span><h4>ลุงเต่า (Turtle)</h4><span class="role">Routine Manager</span><p class="desc">PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต</p><span class="tag tag-success">Active</span></div><div class="team-card"><span class="team-emoji">🦀</span><h4>พี่ปู (Crab)</h4><span class="role">System Guard</span><p class="desc">Backup ข้อมูล ดูแลความปลอดภัย อัพเดทระบบ</p><span class="tag tag-success">Active</span></div></div><h2 style="margin-top: 3.5rem;">💤 ทีม Ocean Ten - Standby 5</h2><p style="color: var(--text-secondary); margin-bottom: 1.5rem;">รอเรียกใช้เฉพาะกิจ</p><div class="team-grid"><div class="team-card"><span class="team-emoji">🦑</span><h4>น้องหมึก (Squid)</h4><span class="role">Deep Research</span><p class="desc">ค้นหาข้อมูลเชิงลึก</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐡</span><h4>น้องปักเป้า (Pufferfish)</h4><span class="role">QA / Reviewer</span><p class="desc">ตรวจทานงานชิ้นใหญ่</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐙</span><h4>พี่หมึกสาย (Octopus)</h4><span class="role">Problem Solver</span><p class="desc">แก้ปัญหาเฉพาะจุด</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🐎</span><h4>น้องม้าน้ำ (Seahorse)</h4><span class="role">Communication</span><p class="desc">Email แปลภาษา TTS</p><span class="tag tag-warning">Standby</span></div><div class="team-card"><span class="team-emoji">🌟</span><h4>คุณปลาดาว (Starfish)</h4><span class="role">Browser Automation</span><p class="desc">ควบคุม Browser อัตโนมัติ</p><span class="tag tag-warning">Standby</span></div></div></section>
+            <section id="schedule"><h2>⏰ ตารางงานอัตโนมัติ (Cron Jobs)</h2><p style="color: var(--text-secondary); margin-bottom: 1.5rem;">ระบบทำงานอัตโนมัติตามเวลาที่กำหนด</p><div class="table-container"><table><thead><tr><th>เวลา</th><th>งาน</th><th>Agent</th><th>รายละเอียด</th></tr></thead><tbody><tr><td>07:00</td><td>🌫️ PM 2.5 + จราจร</td><td>🐢 ลุงเต่า</td><td>เช็ค PM 2.5 ศาลายาและสภาพจราจร</td></tr><tr><td>08:00</td><td>📊 Morning Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปราคาทอง XAU/USD + เศรษฐกิจ</td></tr><tr><td>09:00</td><td>💡 Mastermind Propose</td><td>🐋 คุณวาฬ</td><td>เสนอแผนงานวันนี้ ไอเดียเทรด</td></tr><tr><td>14:00</td><td>🚗 รับลูก</td><td>🐢 ลุงเต่า</td><td>เช็คจราจรและสภาพอากาศ</td></tr><tr><td>18:00</td><td>📈 Evening Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปข่าวค่ำและสถานการณ์ตลาด</td></tr><tr><td>21:00</td><td>🌙 Night Brief</td><td>🦈 พี่ฉลาม</td><td>สรุปตลาด US Market และ Gold Futures</td></tr><tr><td>23:00</td><td>💾 System Backup</td><td>🦀 พี่ปู</td><td>Backup ข้อมูลอัตโนมัติและ Healthcheck</td></tr><tr><td>เสาร์ 10:00</td><td>🔧 System Update</td><td>🐙 + 🦀</td><td>อัพเดท OpenClaw และ Skills ทั้งหมด</td></tr></tbody></table></div></section>
+            <section id="rules"><h2>⚡ กฎเหล็ก (Operating Rules)</h2><ul><li><strong>Rule #0: ห้ามเงียบเด็ดขาด!</strong><br>เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที ถ้าเงียบ = ทำงานไม่เสร็จ</li><li><strong>ภาษาไทย 100%</strong><br>ทุกรายงาน ทุกเอกสาร ต้องเป็นภาษาไทยเท่านั้น</li><li><strong>No Fluff</strong><br>ห้ามน้ำท่วมทุ่ง สรุปกระชับ นำไปใช้ตัดสินใจได้จริง</li><li><strong>ความถูกต้อง</strong><br>ถ้าข้อมูลไม่เจอ ต้องบอกว่าไม่เจอ ห้ามมั่วหรือเดาข้อมูล</li><li><strong>Proactive Thinking</strong><br>ไม่ใช่แค่ตอบคำถาม แต่ต้องวิเคราะห์ผลที่ตามมาและเสนอทางเลือก</li></ul></section>
+            <section id="services"><h2>🔧 Services & Tools</h2><div class="table-container"><table><thead><tr><th>Service</th><th>Description</th><th>Status</th></tr></thead><tbody><tr><td><i class="fas fa-robot"></i> OpenClaw</td><td>AI Assistant Platform</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-microchip"></i> MiniMax M2.5</td><td>Primary AI Model</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-chart-line"></i> FMP</td><td>Financial Data API</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-search"></i> Brave Search</td><td>Web Search</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fas fa-envelope"></i> Google Workspace</td><td>Gmail, Calendar, Drive</td><td><span class="status-dot status-active"></span>Active</td></tr><tr><td><i class="fab fa-discord"></i> Discord</td><td>Primary Channel</td><td><span class="status-dot status-active"></span>Active</td></tr></tbody></table></div></section>
+            <section id="knowledge"><h2>🧠 Knowledge Base</h2><div class="grid"><div class="card"><i class="fas fa-chart-line card-icon"></i><h3>Trading Knowledge</h3><p>ความรู้เกี่ยวกับการเทรดทองคำ XAU/USD</p></div><div class="card"><i class="fas fa-code card-icon"></i><h3>Tech Knowledge</h3><p>ความรู้เกี่ยวกับการเขียนโค้ดและ Automation</p></div><div class="card"><i class="fas fa-cogs card-icon"></i><h3>System Knowledge</h3><p>ความรู้เกี่ยวกับ OpenClaw และ Sub-agents</p></div></div></section>
         </main>
-        
-        <footer>
-            <div style="font-size: 1.5rem; margin-bottom: 1rem;">🦐</div>
-            <p>Designed & Engineered by <span style="color: var(--ocean-accent);">Ocean Ten Team</span></p>
-            <p style="opacity: 0.6; font-size: 0.8rem;">Personal AI Assistants built on OpenClaw Framework</p>
-            <p class="terminal-text">System Status: <span style="color: var(--emerald);">Optimal</span> | Last Update: <span id="lastUpdate"></span></p>
-        </footer>
+        <footer><p>🦐 Ocean Ten - AI Personal Assistant Team</p><p>Last Updated: <span id="lastUpdate"></span></p><p style="margin-top: 0.5rem; opacity: 0.5;">Powered by MiniMax M2.5 with Cognitive Upgrade</p></footer>
     </div>
-
-    <script>
-        // Loading Screen Logic
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }, 1800);
-        });
-        
-        // Prevent scroll during loading
-        document.body.style.overflow = 'hidden';
-
-        // Date Update
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        });
-
-        // Header Scroll Effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Scroll Animation Observer
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('section').forEach(section => {
-            if (!section.classList.contains('hero')) {
-                observer.observe(section);
-            }
-        });
-
-        // Particles Configuration
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 40,
-                        "density": { "enable": true, "value_area": 800 }
-                    },
-                    "color": { "value": "#64ffda" },
-                    "shape": { "type": "circle" },
-                    "opacity": {
-                        "value": 0.2,
-                        "random": true,
-                        "anim": { "enable": true, "speed": 1, "opacity_min": 0.05, "sync": false }
-                    },
-                    "size": {
-                        "value": 2,
-                        "random": true,
-                        "anim": { "enable": false }
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#64ffda",
-                        "opacity": 0.1,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 1,
-                        "direction": "none",
-                        "random": true,
-                        "straight": false,
-                        "out_mode": "out",
-                        "bounce": false,
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": { "enable": true, "mode": "grab" },
-                        "onclick": { "enable": true, "mode": "push" },
-                        "resize": true
-                    },
-                    "modes": {
-                        "grab": { "distance": 140, "line_linked": { "opacity": 0.3 } },
-                        "push": { "particles_nb": 3 }
-                    }
-                },
-                "retina_detect": true
-            });
-        }
-    </script>
+    <script>document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });</script>
 </body>
 </html>
