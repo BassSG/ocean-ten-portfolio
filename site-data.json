@@ -1,0 +1,16 @@
+{
+  "team": {
+    "active5": ["🐋 คุณวาฬ", "🦈 พี่ฉลาม", "🐬 น้องโลมา", "🐢 ลุงเต่า", "🦀 พี่ปู"],
+    "standby5": ["🦑 น้องหมึก", "🐡 น้องปักเป้า", "🐙 พี่หมึกสาย", "🐎 น้องม้าน้ำ", "🌟 คุณปลาดาว"]
+  },
+  "schedule": {
+    "morning": "08:00 - Morning Brief",
+    "evening": "18:00 - Evening Brief",
+    "night": "21:00 - Night Brief"
+  },
+  "services": {
+    "openclaw": "Active",
+    "model": "MiniMax M2.5",
+    "fmp": "Active"
+  }
+}

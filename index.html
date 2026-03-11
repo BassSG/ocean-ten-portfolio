@@ -727,3 +727,63 @@
     </script>
 </body>
 </html>
+    <!-- Build Status Section -->
+    <div id="build-status" style="position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--accent-color); font-size: 0.85rem; z-index: 1000; backdrop-filter: blur(10px);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="build-indicator" style="width: 10px; height: 10px; border-radius: 50%; background: #00e676; animation: pulseStatus 2s infinite;"></span>
+            <span id="build-text">Loading...</span>
+        </div>
+        <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+            Last Sync: <span id="last-sync">-</span>
+        </div>
+    </div>
+
+    <script>
+        // Fetch Build Status
+        async function loadBuildStatus() {
+            try {
+                const response = await fetch('build-status.json');
+                const data = await response.json();
+                
+                const indicator = document.getElementById('build-indicator');
+                const text = document.getElementById('build-text');
+                const lastSync = document.getElementById('last-sync');
+                
+                if (data.status === 'success') {
+                    indicator.style.background = '#00e676';
+                    indicator.style.boxShadow = '0 0 10px #00e676';
+                    text.textContent = '✓ Build: Success';
+                } else {
+                    indicator.style.background = '#ff1744';
+                    text.textContent = '✕ Build: Failed';
+                }
+                
+                const date = new Date(data.lastBuild);
+                lastSync.textContent = date.toLocaleString('th-TH');
+            } catch (e) {
+                document.getElementById('build-text').textContent = '⚠ Status: Unknown';
+            }
+        }
+
+        // Load Site Data
+        async function loadSiteData() {
+            try {
+                const response = await fetch('site-data.json');
+                const data = await response.json();
+                console.log('Site Data Loaded:', data);
+            } catch (e) {
+                console.log('Site data not loaded');
+            }
+        }
+
+        // Auto-refresh status every 30 seconds
+        loadBuildStatus();
+        loadSiteData();
+        setInterval(loadBuildStatus, 30000);
+
+        // Animation
+        @keyframes pulseStatus {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </script>
