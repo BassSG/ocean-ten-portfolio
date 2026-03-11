@@ -243,6 +243,9 @@
         <a href="#section-cron" class="nav-item" data-target="section-cron">
             <span class="nav-icon">💓</span><span class="nav-text">Tasks</span>
         </a>
+        <a href="#section-spdr" class="nav-item" data-target="section-spdr">
+            <span class="nav-icon">🥇</span><span class="nav-text">SPDR</span>
+        </a>
         <a href="#section-active" class="nav-item" data-target="section-active">
             <span class="nav-icon">🔥</span><span class="nav-text">Active</span>
         </a>
@@ -288,6 +291,33 @@
                     <tbody id="heartbeat-table-body">
                         </tbody>
                 </table>
+            </div>
+        </section>
+
+        <section id="section-spdr" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">🥇</span> SPDR Gold Holdings</h2>
+            <div class="grid">
+                <div class="dashboard-section">
+                    <h3>📊 ปริมาณทองคำ (ล่าสุด)</h3>
+                    <p style="font-size: 2rem; color: var(--gold); font-weight: bold;">1,073.57 ตัน</p>
+                    <p style="color: var(--neon-red);">+2.86 ตัน 📈 (วันนี้)</p>
+                </div>
+                <div class="dashboard-section">
+                    <h3>📈 มูลค่าตลาดโลก</h3>
+                    <p style="font-size: 1.8rem; color: var(--gold); font-weight: bold;">5,086.35 ล้าน$</p>
+                    <p style="color: var(--text-muted);">SPDR Gold Shares (GLD)</p>
+                </div>
+                <div class="dashboard-section">
+                    <h3>🕐 อัพเดทล่าสุด</h3>
+                    <p style="font-size: 1.2rem;">05:09 น. (ตามเวลาไทย)</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">แหล่งข้อมูล: traderider.com</p>
+                </div>
+                <div class="dashboard-section">
+                    <h3>📅 สถิติปี 2026</h3>
+                    <p>ม.ค: +15.11 ตัน</p>
+                    <p>ก.พ: +14.23 ตัน</p>
+                    <p>มี.ค: -27.77 ตัน</p>
+                </div>
             </div>
         </section>
 
@@ -420,12 +450,16 @@
         // ================= LIVE CLOCK & HEARTBEAT LOGIC =================
         const cronSchedule = [
             { time: "07:00", agent: "🐢 ลุงเต่า (Turtle)", task: "PM 2.5 + Traffic Radar", id: "turtle" },
-            { time: "08:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Morning Brief (Gold/Econ)", id: "shark" },
+            { time: "08:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Morning Brief (Gold/Econ/SPDR)", id: "shark" },
             { time: "09:00", agent: "🐋 คุณวาฬ (Whale)", task: "Mastermind Proposal", id: "whale" },
+            { time: "10:00", agent: "🐬 น้องโลมา (Dolphin)", task: "Tech Health Check", id: "dolphin" },
+            { time: "12:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Mid-day Market Scan", id: "shark" },
             { time: "14:00", agent: "🐢 ลุงเต่า (Turtle)", task: "School Pick-up Radar", id: "turtle" },
+            { time: "16:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Pre-Evening News", id: "shark" },
             { time: "18:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Evening Brief", id: "shark" },
             { time: "21:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Night Brief (US Market)", id: "shark" },
-            { time: "23:00", agent: "🦀 พี่ปู (Crab)", task: "System Backup", id: "crab" }
+            { time: "23:00", agent: "🦀 พี่ปู (Crab)", task: "System Backup", id: "crab" },
+            { time: "เสาร์ 10:00", agent: "🐙 + 🦀", task: "System Update (Skills)", id: "system" }
         ];
 
         function updateClockAndHeartbeat() {
@@ -489,7 +523,14 @@
                 content: `<div class="modal-header-area"><h2>🦈 พี่ฉลาม (Shark) <span class="sub-title">Trading & Finance Analyst</span></h2></div>
                     <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Monitor XAU/USD (Gold), analyze market trends, and provide financial news. (ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน)</p></div>
                     <div class="dashboard-section"><h3>📚 Knowledge Base (Trading)</h3><ul><li><b>XAU/USD (ทองคำ)</b></li><li><b>การวิเคราะห์ทางเทคนิค (Technical Analysis)</b></li><li><b>ข่าวเศรษฐกิจ</b></li></ul></div>
-                    <div class="dashboard-section"><h3>⏰ Cron Jobs</h3><ul><li><b>08:00</b> - Morning Brief (Gold/Econ)</li><li><b>18:00</b> - Evening Brief</li><li><b>21:00</b> - Night Brief (US Market)</li></ul></div>
+                    <div class="dashboard-section"><h3>⏰ Cron Jobs</h3><ul>
+                        <li><b>08:00</b> - Morning Brief (Gold/Econ/SPDR)</li>
+                        <li><b>10:00</b> - Tech Health Check (Dolphin)</li>
+                        <li><b>12:00</b> - Mid-day Market Scan</li>
+                        <li><b>16:00</b> - Pre-Evening News</li>
+                        <li><b>18:00</b> - Evening Brief</li>
+                        <li><b>21:00</b> - Night Brief (US Market)</li>
+                    </ul></div>
                     <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">Gold Price</span><span class="keyword-tag">Market News</span><span class="keyword-tag">Technical Analysis</span><span class="keyword-tag">Economy</span></div></div></div>` },
 
             dolphin: { title: "🐬 น้องโลมา (Dolphin)", role: "Tech Executor / Developer", status: "Active", badges: ["Coding", "Automation", "Scripts"], 
