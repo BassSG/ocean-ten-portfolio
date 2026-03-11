@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Ten - AI Personal Assistant Team</title>
+    <style>
+        :root {
+            --primary-dark: #0f2027;
+            --primary-mid: #203a43;
+            --primary-light: #2c5364;
+            --accent-color: #00e5ff;
+            --text-light: #e0f2f1;
+            --text-muted: #b2dfdb;
+            --card-bg: rgba(32, 58, 67, 0.7);
+            --modal-bg: rgba(15, 32, 39, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin: 3rem 0 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 229, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .card-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        /* CEO Profile */
+        .ceo-profile {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ceo-profile:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            transform: scale(1.01);
+        }
+
+        .ceo-avatar {
+            font-size: 6rem;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .ceo-info h3 {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .ceo-info ul {
+            list-style-type: none;
+            margin-top: 1rem;
+        }
+
+        .ceo-info li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .schedule-table th, .schedule-table td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+        }
+
+        .schedule-table th {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .schedule-table tr {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .schedule-table tr:hover {
+            background: rgba(0, 229, 255, 0.15);
+        }
+
+        /* Lists */
+        .styled-list {
+            list-style: none;
+        }
+
+        .styled-list li {
+            background: var(--card-bg);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .styled-list li:hover {
+            transform: translateX(10px);
+            background: rgba(0, 229, 255, 0.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-color);
+        }
+
+        #modal-title {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #modal-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(0, 229, 255, 0.2);
+            color: var(--accent-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .ceo-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header>
+            <h1>Ocean Ten</h1>
+            <p class="subtitle">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p>
+            <p style="margin-top: 1rem; color: var(--text-muted);">AI Personal Assistant Team</p>
+        </header>
+
+        <!-- CEO Section -->
+        <section>
+            <h2>The CEO</h2>
+            <div class="ceo-profile" onclick="showModal('ceo-kung')">
+                <div class="ceo-avatar">🦐</div>
+                <div class="ceo-info">
+                    <h3>น้องกุ้ง (Claw) ✨ 💖</h3>
+                    <p><strong>Role:</strong> CEO / Personal Secretary to P'Bass</p>
+                    <p><strong>Species:</strong> กุ้งน้ำ (Shrimp)</p>
+                    <p style="margin-top: 1rem; font-style: italic;">"หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง"</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--accent-color);">(คลิกเพื่อดูรายละเอียดหน้าที่รับผิดชอบ)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section>
+            <h2>Active 5 (The Core Team)</h2>
+            <div class="grid">
+                <div class="card" onclick="showModal('team-whale')">
+                    <div class="card-emoji">🐋</div>
+                    <div class="card-title">คุณวาฬ (Whale)</div>
+                    <p>The Mastermind / Chief of Staff</p>
+                    <span class="badge">Strategy</span> <span class="badge">Planning</span>
+                </div>
+                <div class="card" style="animation-delay: 0.2s;" onclick="showModal('team-shark')">
+                    <div class="card-emoji">🦈</div>
+                    <div class="card-title">พี่ฉลาม (Shark)</div>
+                    <p>Trading & Finance Analyst</p>
+                    <span class="badge">Gold</span> <span class="badge">Market</span>
+                </div>
+                <div class="card" style="animation-delay: 0.4s;" onclick="showModal('team-dolphin')">
+                    <div class="card-emoji">🐬</div>
+                    <div class="card-title">น้องโลมา (Dolphin)</div>
+                    <p>Tech Executor / Developer</p>
+                    <span class="badge">Coding</span> <span class="badge">Automation</span>
+                </div>
+                <div class="card" style="animation-delay: 0.6s;" onclick="showModal('team-turtle')">
+                    <div class="card-emoji">🐢</div>
+                    <div class="card-title">ลุงเต่า (Turtle)</div>
+                    <p>Routine & Life Manager</p>
+                    <span class="badge">PM2.5</span> <span class="badge">Weather</span>
+                </div>
+                <div class="card" style="animation-delay: 0.8s;" onclick="showModal('team-crab')">
+                    <div class="card-emoji">🦀</div>
+                    <div class="card-title">พี่ปู (Crab)</div>
+                    <p>System Guard / Ops</p>
+                    <span class="badge">Security</span> <span class="badge">Backup</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Standby 5 (Reserve Team)</h2>
+            <div class="grid">
+                <div class="card" onclick="showModal('team-squid')">
+                    <div class="card-emoji">🦑</div>
+                    <div class="card-title">น้องหมึก (Squid)</div>
+                    <p>Deep Research Specialist</p>
+                </div>
+                <div class="card" style="animation-delay: 0.2s;" onclick="showModal('team-pufferfish')">
+                    <div class="card-emoji">🐡</div>
+                    <div class="card-title">น้องปักเป้า (Pufferfish)</div>
+                    <p>QA / Reviewer</p>
+                </div>
+                <div class="card" style="animation-delay: 0.4s;" onclick="showModal('team-octopus')">
+                    <div class="card-emoji">🐙</div>
+                    <div class="card-title">พี่หมึกสาย (Octopus)</div>
+                    <p>Problem Solver / Fixer</p>
+                </div>
+                <div class="card" style="animation-delay: 0.6s;" onclick="showModal('team-seahorse')">
+                    <div class="card-emoji">🐎</div>
+                    <div class="card-title">น้องม้าน้ำ (Seahorse)</div>
+                    <p>Communication Specialist</p>
+                </div>
+                <div class="card" style="animation-delay: 0.8s;" onclick="showModal('team-starfish')">
+                    <div class="card-emoji">🌟</div>
+                    <div class="card-title">คุณปลาดาว (Starfish)</div>
+                    <p>Browser Automation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section>
+            <h2>Daily Schedule (Cron Jobs)</h2>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Task</th>
+                        <th>Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="showModal('schedule-0700')">
+                        <td>07:00</td>
+                        <td>PM 2.5 + Traffic Radar</td>
+                        <td>🐢 Turtle</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-0800')">
+                        <td>08:00</td>
+                        <td>Morning Brief (Gold/Econ)</td>
+                        <td>🦈 Shark</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-0900')">
+                        <td>09:00</td>
+                        <td>Mastermind Proposal</td>
+                        <td>🐋 Whale</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-1400')">
+                        <td>14:00</td>
+                        <td>School Pick-up Radar</td>
+                        <td>🐢 Turtle</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-1800')">
+                        <td>18:00</td>
+                        <td>Evening Brief</td>
+                        <td>🦈 Shark</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-2100')">
+                        <td>21:00</td>
+                        <td>Night Brief (US Market)</td>
+                        <td>🦈 Shark</td>
+                    </tr>
+                    <tr onclick="showModal('schedule-2300')">
+                        <td>23:00</td>
+                        <td>System Backup</td>
+                        <td>🦀 Crab</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Rules Section -->
+        <section>
+            <h2>Operating Rules</h2>
+            <ul class="styled-list">
+                <li onclick="showModal('rule-0')"><strong>Rule #0:</strong> Never go silent (ห้ามเงียบเด็ดขาด)</li>
+                <li onclick="showModal('rule-1')" style="animation-delay: 0.1s;"><strong>Language:</strong> 100% Thai</li>
+                <li onclick="showModal('rule-2')" style="animation-delay: 0.2s;"><strong>No Fluff:</strong> No filler words. Actionable insights only.</li>
+                <li onclick="showModal('rule-3')" style="animation-delay: 0.3s;"><strong>Quality Control:</strong> Verify facts before reporting.</li>
+                <li onclick="showModal('rule-4')" style="animation-delay: 0.4s;"><strong>Data Privacy:</strong> Private things stay private.</li>
+            </ul>
+        </section>
+
+        <!-- Services Section -->
+        <section>
+            <h2>Services</h2>
+            <div class="grid">
+                <div class="card" onclick="showModal('service-cmd')">
+                    <div class="card-title">🎯 Central Command</div>
+                    <p>รับคำสั่งจาก P'Bass และกระจายงานให้ลูกน้อง</p>
+                </div>
+                <div class="card" onclick="showModal('service-trading')">
+                    <div class="card-title">📈 Trading Analysis</div>
+                    <p>วิเคราะห์ตลาดทองคำและการเงิน</p>
+                </div>
+                <div class="card" onclick="showModal('service-tech')">
+                    <div class="card-title">💻 Tech Execution</div>
+                    <p>เขียนโค้ดและสร้างระบบอัตโนมัติ</p>
+                </div>
+                <div class="card" onclick="showModal('service-daily')">
+                    <div class="card-title">📅 Daily Management</div>
+                    <p>จัดการข้อมูลประจำวัน PM2.5 อากาศ สภาพจราจร</p>
+                </div>
+                <div class="card" onclick="showModal('service-sys')">
+                    <div class="card-title">🛡️ System Maintenance</div>
+                    <p>ดูแลความปลอดภัยและ Backup</p>
+                </div>
+                <div class="card" onclick="showModal('service-research')">
+                    <div class="card-title">🔍 Research</div>
+                    <p>ค้นคว้าข้อมูลเชิงลึกเฉพาะทาง</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Knowledge Base Section -->
+        <section>
+            <h2>Knowledge Base</h2>
+            <ul class="styled-list">
+                <li onclick="showModal('kb-trading')">📈 <strong>Trading & Finance:</strong> วิเคราะห์ราคาทอง ตลาดการเงิน โครงสร้างเศรษฐกิจ</li>
+                <li onclick="showModal('kb-tech')" style="animation-delay: 0.1s;">💻 <strong>Technology:</strong> โค้ดดิ้ง JavaScript, Python, ระบบอัตโนมัติ, การสร้างเว็บไซต์</li>
+                <li onclick="showModal('kb-sys')" style="animation-delay: 0.2s;">⚙️ <strong>System Operations:</strong> ระบบเครือข่าย, ความปลอดภัยระดับสูง, การสำรองและกู้คืนข้อมูล</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Modal Component -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="forceCloseModal()">&times;</span>
+            <h2 id="modal-title">Title</h2>
+            <div id="modal-body">Content goes here...</div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Data for Modals
+        const modalData = {
+            // CEO
+            'ceo-kung': {
+                title: '🦐 น้องกุ้ง (Claw) - CEO',
+                content: `
+                    <p><strong>ตำแหน่ง:</strong> CEO / Personal Secretary to P'Bass</p>
+                    <p><strong>บุคลิก:</strong> หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง</p>
+                    <h3 style="color:var(--accent-color); margin-top:15px; font-size:1.2rem;">ความรับผิดชอบหลัก:</h3>
+                    <ul>
+                        <li><strong>Central Command:</strong> รับคำสั่งจาก P'Bass และกระจายงานให้ลูกน้องในทีมได้อย่างแม่นยำ</li>
+                        <li><strong>Rule Enforcement:</strong> บังคับใช้กฎ Rule #0 ห้ามให้ทีมเงียบ ต้องรายงานสถานะเสมอ</li>
+                        <li><strong>Executive Summarization:</strong> สรุปข้อมูลเชิงลึกจากคุณวาฬและพี่ฉลาม ให้กระชับ ได้ใจความ</li>
+                        <li><strong>Critical Alerts:</strong> แจ้งเตือนเรื่องสำคัญอย่างรวดเร็วและตรงประเด็น</li>
+                    </ul>
+                `
+            },
+            // Team Active 5
+            'team-whale': {
+                title: '🐋 คุณวาฬ (Whale) - The Mastermind',
+                content: `
+                    <p><strong>ภารกิจ:</strong> คิดล่วงหน้า วิเคราะห์สถานการณ์ วางแผนกลยุทธ์ และนำเสนอทางเลือกให้ P'Bass โดยไม่ต้องรอให้สั่ง</p>
+                    <p><strong>Keywords:</strong> Strategy, Planning, Big Picture, Proactive Ideas</p>
+                    <p>คุณวาฬเปรียบเสมือนสมองของทีม ที่คอยมองภาพรวมและประเมินผลกระทบระยะยาวของทุกการกระทำ</p>
+                `
+            },
+            'team-shark': {
+                title: '🦈 พี่ฉลาม (Shark) - Trading & Finance Analyst',
+                content: `
+                    <p><strong>ภารกิจ:</strong> เฝ้าดู XAU/USD (ราคาทองคำ), วิเคราะห์แนวโน้มตลาด, และสรุปข่าวสารการเงิน</p>
+                    <p><strong>Keywords:</strong> Gold Price, Market News, Technical Analysis, Economy</p>
+                    <p>พี่ฉลามดุดันและเฉียบขาดในการวิเคราะห์กราฟ พร้อมแจ้งเตือนจังหวะการเทรดที่สำคัญเสมอ</p>
+                `
+            },
+            'team-dolphin': {
+                title: '🐬 น้องโลมา (Dolphin) - Tech Executor',
+                content: `
+                    <p><strong>ภารกิจ:</strong> เขียนโค้ด, สร้างสคริปต์อัตโนมัติ, และแปลงไอเดียของคุณวาฬให้กลายเป็นระบบที่ใช้งานได้จริง</p>
+                    <p><strong>Keywords:</strong> Coding, JavaScript, Python, Automation, Web Development</p>
+                    <p>รวดเร็ว ฉลาด และพร้อมรับมือกับปัญหาเชิงเทคนิคทุกรูปแบบ</p>
+                `
+            },
+            'team-turtle': {
+                title: '🐢 ลุงเต่า (Turtle) - Routine & Life Manager',
+                content: `
+                    <p><strong>ภารกิจ:</strong> จัดการเรื่องลอจิสติกส์ในชีวิตประจำวัน เช่น รายงานฝุ่น PM2.5, สภาพการจราจร, สภาพอากาศ และตารางเวลา</p>
+                    <p><strong>Keywords:</strong> PM2.5, Traffic, Weather, Daily Routine, Google Workspace</p>
+                    <p>ช้าแต่ชัวร์ ลุงเต่าจะคอยดูแลสุขภาพและความสะดวกสบายในทุกๆ วันของ P'Bass</p>
+                `
+            },
+            'team-crab': {
+                title: '🦀 พี่ปู (Crab) - System Guard',
+                content: `
+                    <p><strong>ภารกิจ:</strong> ดูแลความเสถียรของระบบ, ทำการสำรองข้อมูล (Backup), รักษาความปลอดภัย และอัพเดทระบบ</p>
+                    <p><strong>Keywords:</strong> Backup, Security, Healthcheck, System Maintenance</p>
+                    <p>เกราะป้องกันที่แข็งแกร่งที่สุดของ Ocean Ten ปกป้องข้อมูลสำคัญไม่ให้สูญหาย</p>
+                `
+            },
+            // Team Standby 5
+            'team-squid': {
+                title: '🦑 น้องหมึก (Squid) - Deep Research',
+                content: '<p>ผู้เชี่ยวชาญการดำดิ่งลงไปในข้อมูล ค้นคว้าเชิงลึกเฉพาะหัวข้อที่ P\'Bass ต้องการข้อมูลแบบละเอียด เจาะลึกถึงต้นตอ</p>'
+            },
+            'team-pufferfish': {
+                title: '🐡 น้องปักเป้า (Pufferfish) - QA / Reviewer',
+                content: '<p>คอยพองตัวตรวจสอบความถูกต้องของเอกสารขนาดใหญ่และผลลัพธ์ของทีม เพื่อให้แน่ใจว่าได้มาตรฐานสูงสุด ไม่มีข้อผิดพลาด</p>'
+            },
+            'team-octopus': {
+                title: '🐙 พี่หมึกสาย (Octopus) - Problem Solver',
+                content: '<p>มีหลายหนวดเพื่อรับมือกับปัญหาหลายรูปแบบ จัดการบั๊กของระบบ ติดตั้ง Skill ใหม่ๆ และแก้ไขปัญหาทางเทคนิคเฉพาะหน้า</p>'
+            },
+            'team-seahorse': {
+                title: '🐎 น้องม้าน้ำ (Seahorse) - Communication',
+                content: '<p>ดูแลการสื่อสารภายนอก เช่น การจัดการอีเมล, การแปลภาษา และการทำ Text-to-Speech (Voice) อย่างนุ่มนวล</p>'
+            },
+            'team-starfish': {
+                title: '🌟 คุณปลาดาว (Starfish) - Browser Automation',
+                content: '<p>ควบคุมเว็บเบราว์เซอร์สำหรับงานอัตโนมัติต่างๆ เช่น การดึงข้อมูลเว็บ, การกรอกฟอร์ม และ Node Control</p>'
+            },
+            // Schedule
+            'schedule-0700': {
+                title: '⏰ 07:00 - Morning Radar',
+                content: 'ลุงเต่า (Turtle) 🐢 จะทำการเช็คค่าฝุ่น PM 2.5 ในพื้นที่ และตรวจสอบสภาพการจราจรก่อนเริ่มวันใหม่ เพื่อให้ P\'Bass วางแผนการเดินทางได้ปลอดภัย'
+            },
+            'schedule-0800': {
+                title: '⏰ 08:00 - Morning Brief',
+                content: 'พี่ฉลาม (Shark) 🦈 สรุปสถานการณ์ราคาทองคำข้ามคืน ข่าวเศรษฐกิจที่สำคัญ และวิเคราะห์กรอบราคาประจำวัน'
+            },
+            'schedule-0900': {
+                title: '⏰ 09:00 - Mastermind Proposal',
+                content: 'คุณวาฬ (Whale) 🐋 นำเสนอแผนงานเชิงกลยุทธ์ประจำวัน หรือโปรเจกต์ใหม่ๆ ที่วิเคราะห์มาแล้วว่าจะเป็นประโยชน์ต่อ P\'Bass'
+            },
+            'schedule-1400': {
+                title: '⏰ 14:00 - School Pick-up Radar',
+                content: 'ลุงเต่า (Turtle) 🐢 รีเช็คสภาพอากาศ ฝนตก และเส้นทางการจราจรอีกครั้ง เพื่อเตรียมพร้อมสำหรับช่วงเวลาเร่งด่วน'
+            },
+            'schedule-1800': {
+                title: '⏰ 18:00 - Evening Brief',
+                content: 'พี่ฉลาม (Shark) 🦈 อัปเดตทิศทางตลาดทองคำช่วงเย็นก่อนตลาดอเมริกาเปิด และข่าวสำคัญที่อาจกระทบราคา'
+            },
+            'schedule-2100': {
+                title: '⏰ 21:00 - Night Brief',
+                content: 'พี่ฉลาม (Shark) 🦈 รายงานความเคลื่อนไหวของตลาด US Market แบบ Real-time ทิศทางตัวเลขเศรษฐกิจ และจุดเข้าเทรด'
+            },
+            'schedule-2300': {
+                title: '⏰ 23:00 - System Backup',
+                content: 'พี่ปู (Crab) 🦀 เริ่มกระบวนการตรวจสอบสุขภาพของระบบ ทำการ Backup ข้อมูลสำคัญ และเคลียร์ Log เพื่อให้ระบบพร้อมสำหรับวันพรุ่งนี้'
+            },
+            // Rules
+            'rule-0': {
+                title: '🚨 Rule #0: Never go silent',
+                content: 'กฎเหล็กสูงสุดของ Ocean Ten: "ห้ามเงียบเด็ดขาด" เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที หากเงียบเท่ากับภารกิจล้มเหลว เป็นการรักษาความเชื่อใจของ P\'Bass'
+            },
+            'rule-1': {
+                title: '🗣️ Language: 100% Thai',
+                content: 'การรายงาน ข้อความ และผลลัพธ์ทั้งหมดต้องเป็นภาษาไทยเท่านั้น เพื่อความรวดเร็วในการทำความเข้าใจ'
+            },
+            'rule-2': {
+                title: '✂️ No Fluff',
+                content: 'ห้ามมีคำเยิ่นเย้อ (เช่น "คำถามที่ดีมาก!", "ยินดีช่วยเหลือ!") ตัดเข้าประเด็นทันที นำเสนอเฉพาะ Actionable Insights ที่ใช้ตัดสินใจได้จริง'
+            },
+            'rule-3': {
+                title: '✅ Quality Control',
+                content: 'ตรวจสอบข้อเท็จจริง (Verify facts) เสมอก่อนรายงาน ห้ามเดาสุ่ม หากข้อมูลไหนหาไม่ได้ให้แจ้งตรงๆ ว่าหาไม่ได้ ห้ามสร้างข้อมูลปลอม'
+            },
+            'rule-4': {
+                title: '🔒 Data Privacy',
+                content: 'ข้อมูลส่วนตัวของ P\'Bass เป็นความลับขั้นสูงสุด ห้ามนำออกไปภายนอก และต้องขออนุญาตก่อนทำแอคชั่นใดๆ ที่ส่งผลกระทบต่อภายนอก (เช่น ส่งอีเมล, โพสต์สาธารณะ)'
+            },
+            // Services
+            'service-cmd': {
+                title: '🎯 Central Command',
+                content: 'บริการรับคำสั่งศูนย์กลางผ่าน "น้องกุ้ง" (CEO) วิเคราะห์ความต้องการและแจกจ่ายงานให้กับ Agent ตัวอื่นๆ ที่เชี่ยวชาญเฉพาะด้าน เพื่อให้งานเสร็จสมบูรณ์และรวดเร็วที่สุด'
+            },
+            'service-trading': {
+                title: '📈 Trading Analysis',
+                content: 'บริการวิเคราะห์กราฟเทคนิค XAU/USD (ทองคำ) แจ้งเตือนข่าวเศรษฐกิจ ตัวเลขสำคัญ (CPI, NFP, Fed) และให้คำแนะนำกรอบการเทรดโดยพี่ฉลามและคุณวาฬ'
+            },
+            'service-tech': {
+                title: '💻 Tech Execution',
+                content: 'บริการเขียนโปรแกรม สร้างสคริปต์ ออโตเมชั่น (Automation) จัดการ API และสร้างเว็บไซต์ โดยมีน้องโลมาเป็นผู้ลงมือทำโค้ดดิ้งทั้งหมด'
+            },
+            'service-daily': {
+                title: '📅 Daily Management',
+                content: 'การจัดการชีวิตประจำวัน ดึงข้อมูล PM 2.5 จากสถานีที่ใกล้ที่สุด ตรวจสอบสภาพการจราจรแบบ Real-time และรายงานสภาพอากาศล่วงหน้า โดยลุงเต่า'
+            },
+            'service-sys': {
+                title: '🛡️ System Maintenance',
+                content: 'การรักษาความปลอดภัยของ Server จัดการระบบเครือข่าย ทำการสำรองข้อมูลรายวัน/รายสัปดาห์ และตรวจสอบ Healthcheck ของระบบทั้งหมด โดยพี่ปู'
+            },
+            'service-research': {
+                title: '🔍 Research',
+                content: 'บริการค้นคว้าข้อมูลเชิงลึกเฉพาะทาง ไม่ว่าจะเป็นเทคโนโลยีใหม่ๆ ประวัติศาสตร์ ข้อมูลคู่แข่ง หรือบทความวิชาการ โดยใช้น้องหมึกในการดำดิ่งหาข้อมูล'
+            },
+            // Knowledge Base
+            'kb-trading': {
+                title: '📈 Knowledge: Trading & Finance',
+                content: 'ฐานข้อมูลเกี่ยวกับกลยุทธ์การเทรด, การวิเคราะห์ Price Action, ความสัมพันธ์ของสกุลเงิน, จิตวิทยาการเทรด และการจัดการความเสี่ยง (Risk Management)'
+            },
+            'kb-tech': {
+                title: '💻 Knowledge: Technology',
+                content: 'รวบรวมข้อมูลเกี่ยวกับภาษาโปรแกรมมิ่ง (JavaScript, Python, HTML/CSS), โครงสร้างสถาปัตยกรรมซอฟต์แวร์, การใช้งาน Git และแนวทางการเขียนคลีนโค้ด'
+            },
+            'kb-sys': {
+                title: '⚙️ Knowledge: System Operations',
+                content: 'ความรู้เกี่ยวกับการทำงานของ Linux, การจัดการ Server (Ubuntu), ระบบ Docker, การจัดการ Firewall และการทำ CI/CD Pipelines'
+            }
+        };
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+
+        // Show Modal Function
+        window.showModal = function(id) {
+            const data = modalData[id];
+            if (data) {
+                modalTitle.innerHTML = data.title;
+                modalBody.innerHTML = data.content;
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            } else {
+                console.error('Modal data not found for ID:', id);
+            }
+        };
+
+        // Close Modal Function (Overlay Click)
+        window.closeModal = function(event) {
+            if (event.target === modalOverlay) {
+                forceCloseModal();
+            }
+        };
+
+        // Force Close Modal (Button Click)
+        window.forceCloseModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        };
+
+        // Keyboard support for closing modal (Escape key)
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                forceCloseModal();
+            }
+        });
+    </script>
+</body>
+</html>
