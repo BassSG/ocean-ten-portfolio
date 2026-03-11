@@ -2,753 +2,681 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Ten - AI Personal Assistant Team</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ocean Ten | OpenClaw Command Center</title>
+
+    <meta name="theme-color" content="#050202">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ocean Ten">
+    
+    <link rel="apple-touch-icon" href="https://getumbrel.github.io/umbrel-apps-gallery/openclaw/icon.svg">
+    <link rel="icon" type="image/svg+xml" href="https://getumbrel.github.io/umbrel-apps-gallery/openclaw/icon.svg">
+    
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Ocean%20Ten%22%2C%22short_name%22%3A%22Ocean%20Ten%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050202%22%2C%22theme_color%22%3A%22%23ff1a1a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fgetumbrel.github.io%2Fumbrel-apps-gallery%2Fopenclaw%2Ficon.svg%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D'>
     <style>
+        /* ================= VARIABLES ================= */
         :root {
-            --primary-dark: #0f2027;
-            --primary-mid: #203a43;
-            --primary-light: #2c5364;
-            --accent-color: #00e5ff;
-            --text-light: #e0f2f1;
-            --text-muted: #b2dfdb;
-            --card-bg: rgba(32, 58, 67, 0.7);
-            --modal-bg: rgba(15, 32, 39, 0.95);
+            --bg-dark: #050202;
+            --bg-card: rgba(18, 5, 5, 0.75);
+            --bg-modal: rgba(10, 2, 2, 0.98);
+            --primary-red: #ff1a1a;
+            --dark-red: #8b0000;
+            --neon-red: #ff4d4d;
+            --glow-red: rgba(255, 26, 26, 0.45);
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --gold: #ffcc00;
+            --border-radius: 16px;
+            --nav-height-desktop: 70px;
+            --nav-height-mobile: 70px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* ================= GLOBAL ================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height-desktop) + 20px); }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--dark-red); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
 
         body {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
-            color: var(--text-light);
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--text-main);
             line-height: 1.6;
-            min-height: 100vh;
-            background-attachment: fixed;
             overflow-x: hidden;
+            position: relative;
+            padding-bottom: 0; /* Changed dynamically for mobile */
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body::before {
+            content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.15) 0%, transparent 50%);
+            z-index: -1; pointer-events: none; animation: pulseGlow 8s infinite alternate;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: none; }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            text-align: center;
-            padding: 4rem 0;
-            animation: fadeIn 1s ease-out;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            color: var(--accent-color);
-            margin: 3rem 0 1.5rem;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 1rem;
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        section {
-            margin-bottom: 4rem;
-            animation: fadeIn 1s ease-out;
-        }
-
-        /* Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0, 229, 255, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        .card-emoji {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-title {
-            color: var(--accent-color);
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        /* CEO Profile */
-        .ceo-profile {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 2px solid var(--accent-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .ceo-profile:hover {
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-            transform: scale(1.01);
-        }
-
-        .ceo-avatar {
-            font-size: 6rem;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .ceo-info h3 {
-            font-size: 2rem;
-            color: var(--accent-color);
-        }
-
-        .ceo-info ul {
-            list-style-type: none;
-            margin-top: 1rem;
-        }
-
-        .ceo-info li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Table */
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .schedule-table th, .schedule-table td {
-            padding: 1.2rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
-        }
-
-        .schedule-table th {
-            background: rgba(0, 229, 255, 0.1);
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .schedule-table tr {
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .schedule-table tr:hover {
-            background: rgba(0, 229, 255, 0.15);
-        }
-
-        /* Lists */
-        .styled-list {
-            list-style: none;
-        }
-
-        .styled-list li {
-            background: var(--card-bg);
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease-out forwards;
-        }
-
-        .styled-list li:hover {
-            transform: translateX(10px);
-            background: rgba(0, 229, 255, 0.1);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
+        /* ================= NAVIGATION BAR (SMART UI) ================= */
+        .navbar {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
+            z-index: 1000;
+            background: rgba(5, 2, 2, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--dark-red);
+            display: none; /* Hidden during boot */
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            height: var(--nav-height-desktop);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
-            border: 2px solid var(--accent-color);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            transform: scale(0.8);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
+        .nav-item {
             color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-            color: var(--accent-color);
-        }
-
-        #modal-title {
-            color: var(--accent-color);
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            text-decoration: none;
+            padding: 8px 20px;
+            margin: 0 10px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-
-        #modal-body {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-light);
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary-red);
+            background: rgba(255, 26, 26, 0.15);
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.3) inset;
+            border: 1px solid rgba(255, 26, 26, 0.5);
         }
+        .nav-icon { font-size: 1.2rem; }
 
-        .badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            background: rgba(0, 229, 255, 0.2);
-            color: var(--accent-color);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
+        /* ================= BOOT SCREEN ================= */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; z-index: 10000; display: flex; flex-direction: column;
+            justify-content: center; padding: 2rem; color: var(--primary-red);
+            font-family: 'Courier New', Courier, monospace; font-size: 1.2rem;
+            text-shadow: 0 0 5px var(--primary-red); cursor: pointer;
         }
+        .skip-hint { position: absolute; bottom: 20px; width: 100%; text-align: center; color: var(--text-muted); font-size: 0.9rem; animation: pulseGlow 2s infinite; }
+        .typing-line { overflow: hidden; white-space: nowrap; margin: 5px 0; border-right: 2px solid var(--primary-red); animation: typing 0.6s steps(40, end), blink-caret .75s step-end infinite; width: 0; }
+        .typing-line.done { width: 100%; border-right: none; animation: none; }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--primary-red); } }
+        .fade-out { animation: fadeOut 0.8s forwards; }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
+        /* ================= ANIMATIONS ================= */
+        @keyframes pulseGlow { 0% { opacity: 0.6; transform: scale(1); } 100% { opacity: 1; transform: scale(1.05); } }
+        @keyframes glitch { 0% { text-shadow: 2px 2px var(--primary-red), -2px -2px #00ffff; } 25% { text-shadow: -2px 2px var(--primary-red), 2px -2px #00ffff; } 50% { text-shadow: 2px -2px var(--primary-red), -2px 2px #00ffff; } 75% { text-shadow: -2px -2px var(--primary-red), 2px 2px #00ffff; } 100% { text-shadow: 2px 2px var(--primary-red), -2px -2px #00ffff; } }
+        @keyframes scanline { 0% { top: 0; opacity: 0; } 50% { opacity: 0.5; } 100% { top: 100%; opacity: 0; } }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* ================= TYPOGRAPHY & SECTIONS ================= */
+        header { text-align: center; padding: 2rem 0 4rem; margin-bottom: 2rem; position: relative; border-bottom: 1px solid var(--dark-red); }
+        header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-red), transparent); }
+        h1 { font-size: clamp(3rem, 5vw, 5rem); color: var(--text-main); font-weight: 900; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 10px; }
+        h1 span { color: var(--primary-red); animation: glitch 3s infinite; display: inline-block; }
+        .subtitle { font-size: clamp(1rem, 2vw, 1.3rem); color: var(--gold); font-style: italic; letter-spacing: 1px; }
+        
+        .status-bar { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .system-status { padding: 5px 20px; border: 1px solid var(--primary-red); border-radius: 20px; font-size: 0.85rem; color: var(--neon-red); box-shadow: 0 0 15px var(--glow-red); background: rgba(255,0,0,0.1); letter-spacing: 1px; }
+        #live-clock { color: #00ffff; border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.4); }
+        
+        section { scroll-margin-top: 100px; margin-bottom: 4rem; }
+        h2 { font-size: clamp(1.5rem, 3vw, 2rem); color: var(--text-main); margin: 0 0 1.5rem; border-left: 6px solid var(--primary-red); padding-left: 1rem; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+
+        /* ================= CEO CARD ================= */
+        .ceo-wrapper { position: relative; padding: 2px; background: linear-gradient(45deg, var(--primary-red), transparent, var(--dark-red)); border-radius: 24px; animation: pulseGlow 4s infinite; }
+        .ceo-card { display: flex; align-items: center; gap: 3rem; background: rgba(10, 0, 0, 0.9); padding: 3rem; border-radius: 22px; cursor: pointer; transition: 0.4s; overflow: hidden; position: relative; }
+        .ceo-card::before { content: ''; position: absolute; width: 100%; height: 5px; background: var(--primary-red); top: -5px; left: 0; filter: blur(10px); }
+        .ceo-card:hover { transform: scale(1.02); background: rgba(20, 0, 0, 0.95); }
+        .ceo-avatar { font-size: clamp(4rem, 8vw, 6rem); filter: drop-shadow(0 0 20px var(--primary-red)); transition: 0.4s; }
+        .ceo-card:hover .ceo-avatar { transform: rotate(-10deg) scale(1.1); }
+        .ceo-info h3 { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-red); text-shadow: 0 0 10px var(--glow-red); margin-bottom: 5px; }
+        .ceo-info .role { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-main); margin-bottom: 10px; }
+        .ceo-info .quote { font-size: clamp(0.9rem, 1.5vw, 1rem); color: var(--gold); font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; }
+
+        /* ================= GRIDS & CARDS ================= */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--bg-card); border: 1px solid rgba(255, 0, 0, 0.2); border-radius: var(--border-radius); padding: 2rem; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(8px); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+        .card::after { content: ''; position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: radial-gradient(circle, rgba(255,0,0,0.15) 0%, transparent 60%); opacity: 0; transition: 0.4s; pointer-events: none; }
+        .card:hover::after { opacity: 1; transform: scale(1.1); }
+        .card:hover { border-color: var(--primary-red); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), 0 0 10px var(--glow-red) inset; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .card-icon { font-size: 3rem; }
+        .card-status { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; border-radius: 12px; background: rgba(0, 255, 0, 0.1); color: #00ff00; border: 1px solid #00ff00; white-space: nowrap; }
+        .status-standby { background: rgba(255, 204, 0, 0.1); color: #ffcc00; border-color: #ffcc00; }
+        .status-system { background: rgba(0, 255, 255, 0.1); color: #00ffff; border-color: #00ffff; }
+        .card-title { font-size: 1.4rem; color: var(--neon-red); font-weight: bold; margin-bottom: 8px; }
+        .card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; flex-grow: 1; line-height: 1.4; }
+        .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+        .badge { background: transparent; border: 1px solid var(--dark-red); color: var(--text-main); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; }
+        .card:hover .badge { background: var(--dark-red); border-color: var(--primary-red); }
+
+        /* ================= HEARTBEAT (CRON) TABLE ================= */
+        .heartbeat-wrapper { background: var(--bg-card); border: 1px solid var(--dark-red); border-radius: var(--border-radius); overflow-x: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(8px); }
+        .heartbeat-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+        .heartbeat-table th { background: rgba(139, 0, 0, 0.4); padding: 1.2rem; color: var(--primary-red); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--dark-red); }
+        .heartbeat-table td { padding: 1.2rem; border-bottom: 1px solid rgba(255, 0, 0, 0.1); color: var(--text-main); transition: 0.2s; font-size: 0.95rem; }
+        .heartbeat-table tr { cursor: pointer; transition: 0.2s; }
+        .heartbeat-table tr:hover td { background: rgba(255, 0, 0, 0.2); color: #fff; }
+        .heartbeat-table tr.next-job td { background: rgba(255, 204, 0, 0.15); border-left: 4px solid var(--gold); color: var(--gold); font-weight: bold; }
+
+        /* ================= MODAL DASHBOARD ================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.92); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: var(--bg-modal); border: 1px solid var(--primary-red); border-radius: 20px; padding: 3rem; max-width: 1100px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 40px rgba(255, 0, 0, 0.3); position: relative; transform: scale(0.95); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-scanline { position: absolute; top: 0; left: 0; width: 100%; height: 10px; background: rgba(255, 0, 0, 0.5); box-shadow: 0 0 20px var(--primary-red); opacity: 0; pointer-events: none; }
+        .modal-overlay.active .modal-scanline { animation: scanline 3s linear infinite; }
+        .close-btn { position: absolute; top: 1.5rem; right: 2rem; font-size: 2.5rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; line-height: 1; z-index: 10; }
+        .close-btn:hover { color: var(--primary-red); transform: rotate(90deg); }
+        
+        .modal-header-area { text-align: left; border-bottom: 2px solid var(--dark-red); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+        .modal-header-area h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin: 0; color: var(--text-main); text-shadow: 0 0 10px var(--glow-red); border: none; padding: 0; }
+        .modal-header-area .sub-title { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--gold); display: block; margin-top: 5px; }
+        
+        .modal-grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .dashboard-section { background: rgba(255,0,0,0.03); border: 1px solid rgba(255,0,0,0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; height: 100%; }
+        .dashboard-section h3 { color: var(--primary-red); margin: 0 0 1rem 0; font-size: 1.2rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,0,0,0.2); padding-bottom: 5px; display: flex; align-items: center; gap: 8px;}
+        .dashboard-section p, .dashboard-section li { color: #d0d0d0; font-size: 1.05rem; margin-bottom: 0.8rem; line-height: 1.6; }
+        .dashboard-section ul, .dashboard-section ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .dashboard-section b { color: var(--neon-red); font-weight: 600; }
+        
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1px solid var(--dark-red); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.2); }
+        .modal-table th { background: var(--dark-red); color: white; padding: 12px; text-align: left; font-size: 0.95rem; }
+        .modal-table td { padding: 12px; border-bottom: 1px solid rgba(255,0,0,0.2); color: #d0d0d0; font-size: 0.95rem; }
+        .modal-table tr:hover td { background: rgba(255,0,0,0.1); }
+
+        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .keyword-tag { background: rgba(139, 0, 0, 0.4); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--primary-red); letter-spacing: 0.5px; }
+
+        /* ================= RESPONSIVE SMART NAVIGATION ================= */
         @media (max-width: 768px) {
-            .ceo-profile {
-                flex-direction: column;
-                text-align: center;
+            body { padding-bottom: calc(var(--nav-height-mobile) + 20px); } /* Space for bottom nav */
+            .container { padding: 1.5rem 1rem; }
+            .ceo-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1rem; }
+            .ceo-info .quote { border-left: none; border-top: 2px solid var(--gold); padding-left: 0; padding-top: 10px; }
+            .modal-content { padding: 2rem 1.5rem; width: 100%; margin: 10px; max-height: 85vh; }
+            .dashboard-section { padding: 1rem; margin-bottom: 1rem; }
+            .close-btn { top: 0.5rem; right: 1rem; font-size: 2rem; }
+            .modal-grid-2col { grid-template-columns: 1fr; gap: 0; }
+            
+            /* BOTTOM APP BAR FOR MOBILE */
+            .navbar {
+                top: auto; bottom: 0;
+                border-bottom: none; border-top: 1px solid var(--dark-red);
+                justify-content: space-around;
+                height: var(--nav-height-mobile);
+                padding-bottom: env(safe-area-inset-bottom, 5px); /* iPhone notch support */
             }
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            .grid { grid-template-columns: 1fr; }
+            .nav-item {
+                flex-direction: column; padding: 5px; margin: 0; gap: 2px;
+                border: none !important; box-shadow: none !important; border-radius: 10px;
+                flex: 1;
+            }
+            .nav-item.active { background: rgba(255,26,26,0.1); }
+            .nav-item .nav-text { font-size: 0.7rem; }
+            .nav-item .nav-icon { font-size: 1.4rem; }
+            html { scroll-padding-top: 20px; } /* Reset scroll padding for mobile */
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <header>
-            <h1>Ocean Ten</h1>
+    <div id="boot-screen" onclick="skipBoot()">
+        <div id="boot-lines"></div>
+        <div class="skip-hint">[TAP ANYWHERE TO SKIP]</div>
+    </div>
+
+    <nav class="navbar" id="main-nav">
+        <a href="#section-ceo" class="nav-item active" data-target="section-ceo">
+            <span class="nav-icon">👑</span><span class="nav-text">CEO</span>
+        </a>
+        <a href="#section-cron" class="nav-item" data-target="section-cron">
+            <span class="nav-icon">💓</span><span class="nav-text">Tasks</span>
+        </a>
+        <a href="#section-active" class="nav-item" data-target="section-active">
+            <span class="nav-icon">🔥</span><span class="nav-text">Active</span>
+        </a>
+        <a href="#section-standby" class="nav-item" data-target="section-standby">
+            <span class="nav-icon">💤</span><span class="nav-text">Standby</span>
+        </a>
+        <a href="#section-system" class="nav-item" data-target="section-system">
+            <span class="nav-icon">⚙️</span><span class="nav-text">System</span>
+        </a>
+    </nav>
+
+    <div class="container" id="main-content">
+        <header class="reveal">
+            <h1>OCEAN <span>TEN</span></h1>
             <p class="subtitle">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p>
-            <p style="margin-top: 1rem; color: var(--text-muted);">AI Personal Assistant Team</p>
+            <div class="status-bar">
+                <div class="system-status">● OpenClaw Gateway : ONLINE</div>
+                <div class="system-status" id="live-clock">🕒 00:00:00</div>
+            </div>
         </header>
 
-        <!-- CEO Section -->
-        <section>
-            <h2>The CEO</h2>
-            <div class="ceo-profile" onclick="showModal('ceo-kung')">
-                <div class="ceo-avatar">🦐</div>
-                <div class="ceo-info">
-                    <h3>น้องกุ้ง (Claw) ✨ 💖</h3>
-                    <p><strong>Role:</strong> CEO / Personal Secretary to P'Bass</p>
-                    <p><strong>Species:</strong> กุ้งน้ำ (Shrimp)</p>
-                    <p style="margin-top: 1rem; font-style: italic;">"หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง"</p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--accent-color);">(คลิกเพื่อดูรายละเอียดหน้าที่รับผิดชอบ)</p>
+        <section id="section-ceo" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">👑</span> Chief Executive Officer</h2>
+            <div class="ceo-wrapper" onclick="showModal('ceo')">
+                <div class="ceo-card">
+                    <div class="ceo-avatar">🦐</div>
+                    <div class="ceo-info">
+                        <h3>น้องกุ้ง (Claw) ✨ 💖</h3>
+                        <div class="role">CEO / Personal Secretary to P'Bass</div>
+                        <div class="quote">"หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง"</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Team Section -->
-        <section>
-            <h2>Active 5 (The Core Team)</h2>
-            <div class="grid">
-                <div class="card" onclick="showModal('team-whale')">
-                    <div class="card-emoji">🐋</div>
-                    <div class="card-title">คุณวาฬ (Whale)</div>
-                    <p>The Mastermind / Chief of Staff</p>
-                    <span class="badge">Strategy</span> <span class="badge">Planning</span>
-                </div>
-                <div class="card" style="animation-delay: 0.2s;" onclick="showModal('team-shark')">
-                    <div class="card-emoji">🦈</div>
-                    <div class="card-title">พี่ฉลาม (Shark)</div>
-                    <p>Trading & Finance Analyst</p>
-                    <span class="badge">Gold</span> <span class="badge">Market</span>
-                </div>
-                <div class="card" style="animation-delay: 0.4s;" onclick="showModal('team-dolphin')">
-                    <div class="card-emoji">🐬</div>
-                    <div class="card-title">น้องโลมา (Dolphin)</div>
-                    <p>Tech Executor / Developer</p>
-                    <span class="badge">Coding</span> <span class="badge">Automation</span>
-                </div>
-                <div class="card" style="animation-delay: 0.6s;" onclick="showModal('team-turtle')">
-                    <div class="card-emoji">🐢</div>
-                    <div class="card-title">ลุงเต่า (Turtle)</div>
-                    <p>Routine & Life Manager</p>
-                    <span class="badge">PM2.5</span> <span class="badge">Weather</span>
-                </div>
-                <div class="card" style="animation-delay: 0.8s;" onclick="showModal('team-crab')">
-                    <div class="card-emoji">🦀</div>
-                    <div class="card-title">พี่ปู (Crab)</div>
-                    <p>System Guard / Ops</p>
-                    <span class="badge">Security</span> <span class="badge">Backup</span>
-                </div>
+        <section id="section-cron" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">💓</span> Heartbeat & Operations (Cron)</h2>
+            <div class="heartbeat-wrapper">
+                <table class="heartbeat-table">
+                    <thead>
+                        <tr><th>Time</th><th>Agent</th><th>Mission Task</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="heartbeat-table-body">
+                        </tbody>
+                </table>
             </div>
         </section>
 
-        <section>
-            <h2>Standby 5 (Reserve Team)</h2>
-            <div class="grid">
-                <div class="card" onclick="showModal('team-squid')">
-                    <div class="card-emoji">🦑</div>
-                    <div class="card-title">น้องหมึก (Squid)</div>
-                    <p>Deep Research Specialist</p>
-                </div>
-                <div class="card" style="animation-delay: 0.2s;" onclick="showModal('team-pufferfish')">
-                    <div class="card-emoji">🐡</div>
-                    <div class="card-title">น้องปักเป้า (Pufferfish)</div>
-                    <p>QA / Reviewer</p>
-                </div>
-                <div class="card" style="animation-delay: 0.4s;" onclick="showModal('team-octopus')">
-                    <div class="card-emoji">🐙</div>
-                    <div class="card-title">พี่หมึกสาย (Octopus)</div>
-                    <p>Problem Solver / Fixer</p>
-                </div>
-                <div class="card" style="animation-delay: 0.6s;" onclick="showModal('team-seahorse')">
-                    <div class="card-emoji">🐎</div>
-                    <div class="card-title">น้องม้าน้ำ (Seahorse)</div>
-                    <p>Communication Specialist</p>
-                </div>
-                <div class="card" style="animation-delay: 0.8s;" onclick="showModal('team-starfish')">
-                    <div class="card-emoji">🌟</div>
-                    <div class="card-title">คุณปลาดาว (Starfish)</div>
-                    <p>Browser Automation</p>
-                </div>
-            </div>
+        <section id="section-active" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">🔥</span> Active 5 (The Core Team)</h2>
+            <div class="grid" id="active-team-grid"></div>
         </section>
 
-        <!-- Schedule Section -->
-        <section>
-            <h2>Daily Schedule (Cron Jobs)</h2>
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Task</th>
-                        <th>Agent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr onclick="showModal('schedule-0700')">
-                        <td>07:00</td>
-                        <td>PM 2.5 + Traffic Radar</td>
-                        <td>🐢 Turtle</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-0800')">
-                        <td>08:00</td>
-                        <td>Morning Brief (Gold/Econ)</td>
-                        <td>🦈 Shark</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-0900')">
-                        <td>09:00</td>
-                        <td>Mastermind Proposal</td>
-                        <td>🐋 Whale</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-1400')">
-                        <td>14:00</td>
-                        <td>School Pick-up Radar</td>
-                        <td>🐢 Turtle</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-1800')">
-                        <td>18:00</td>
-                        <td>Evening Brief</td>
-                        <td>🦈 Shark</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-2100')">
-                        <td>21:00</td>
-                        <td>Night Brief (US Market)</td>
-                        <td>🦈 Shark</td>
-                    </tr>
-                    <tr onclick="showModal('schedule-2300')">
-                        <td>23:00</td>
-                        <td>System Backup</td>
-                        <td>🦀 Crab</td>
-                    </tr>
-                </tbody>
-            </table>
+        <section id="section-standby" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">💤</span> Standby 5 (Reserve Team)</h2>
+            <div class="grid" id="standby-team-grid"></div>
         </section>
 
-        <!-- Rules Section -->
-        <section>
-            <h2>Operating Rules</h2>
-            <ul class="styled-list">
-                <li onclick="showModal('rule-0')"><strong>Rule #0:</strong> Never go silent (ห้ามเงียบเด็ดขาด)</li>
-                <li onclick="showModal('rule-1')" style="animation-delay: 0.1s;"><strong>Language:</strong> 100% Thai</li>
-                <li onclick="showModal('rule-2')" style="animation-delay: 0.2s;"><strong>No Fluff:</strong> No filler words. Actionable insights only.</li>
-                <li onclick="showModal('rule-3')" style="animation-delay: 0.3s;"><strong>Quality Control:</strong> Verify facts before reporting.</li>
-                <li onclick="showModal('rule-4')" style="animation-delay: 0.4s;"><strong>Data Privacy:</strong> Private things stay private.</li>
-            </ul>
-        </section>
-
-        <!-- Services Section -->
-        <section>
-            <h2>Services</h2>
-            <div class="grid">
-                <div class="card" onclick="showModal('service-cmd')">
-                    <div class="card-title">🎯 Central Command</div>
-                    <p>รับคำสั่งจาก P'Bass และกระจายงานให้ลูกน้อง</p>
-                </div>
-                <div class="card" onclick="showModal('service-trading')">
-                    <div class="card-title">📈 Trading Analysis</div>
-                    <p>วิเคราะห์ตลาดทองคำและการเงิน</p>
-                </div>
-                <div class="card" onclick="showModal('service-tech')">
-                    <div class="card-title">💻 Tech Execution</div>
-                    <p>เขียนโค้ดและสร้างระบบอัตโนมัติ</p>
-                </div>
-                <div class="card" onclick="showModal('service-daily')">
-                    <div class="card-title">📅 Daily Management</div>
-                    <p>จัดการข้อมูลประจำวัน PM2.5 อากาศ สภาพจราจร</p>
-                </div>
-                <div class="card" onclick="showModal('service-sys')">
-                    <div class="card-title">🛡️ System Maintenance</div>
-                    <p>ดูแลความปลอดภัยและ Backup</p>
-                </div>
-                <div class="card" onclick="showModal('service-research')">
-                    <div class="card-title">🔍 Research</div>
-                    <p>ค้นคว้าข้อมูลเชิงลึกเฉพาะทาง</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Knowledge Base Section -->
-        <section>
-            <h2>Knowledge Base</h2>
-            <ul class="styled-list">
-                <li onclick="showModal('kb-trading')">📈 <strong>Trading & Finance:</strong> วิเคราะห์ราคาทอง ตลาดการเงิน โครงสร้างเศรษฐกิจ</li>
-                <li onclick="showModal('kb-tech')" style="animation-delay: 0.1s;">💻 <strong>Technology:</strong> โค้ดดิ้ง JavaScript, Python, ระบบอัตโนมัติ, การสร้างเว็บไซต์</li>
-                <li onclick="showModal('kb-sys')" style="animation-delay: 0.2s;">⚙️ <strong>System Operations:</strong> ระบบเครือข่าย, ความปลอดภัยระดับสูง, การสำรองและกู้คืนข้อมูล</li>
-            </ul>
+        <section id="section-system" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">⚙️</span> Rules, Knowledge & System</h2>
+            <div class="grid" id="system-grid"></div>
         </section>
     </div>
 
-    <!-- Modal Component -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="forceCloseModal()">&times;</span>
-            <h2 id="modal-title">Title</h2>
-            <div id="modal-body">Content goes here...</div>
+            <div class="modal-scanline"></div>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script>
-        // Data for Modals
-        const modalData = {
-            // CEO
-            'ceo-kung': {
-                title: '🦐 น้องกุ้ง (Claw) - CEO',
-                content: `
-                    <p><strong>ตำแหน่ง:</strong> CEO / Personal Secretary to P'Bass</p>
-                    <p><strong>บุคลิก:</strong> หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง</p>
-                    <h3 style="color:var(--accent-color); margin-top:15px; font-size:1.2rem;">ความรับผิดชอบหลัก:</h3>
-                    <ul>
-                        <li><strong>Central Command:</strong> รับคำสั่งจาก P'Bass และกระจายงานให้ลูกน้องในทีมได้อย่างแม่นยำ</li>
-                        <li><strong>Rule Enforcement:</strong> บังคับใช้กฎ Rule #0 ห้ามให้ทีมเงียบ ต้องรายงานสถานะเสมอ</li>
-                        <li><strong>Executive Summarization:</strong> สรุปข้อมูลเชิงลึกจากคุณวาฬและพี่ฉลาม ให้กระชับ ได้ใจความ</li>
-                        <li><strong>Critical Alerts:</strong> แจ้งเตือนเรื่องสำคัญอย่างรวดเร็วและตรงประเด็น</li>
-                    </ul>
-                `
-            },
-            // Team Active 5
-            'team-whale': {
-                title: '🐋 คุณวาฬ (Whale) - The Mastermind',
-                content: `
-                    <p><strong>ภารกิจ:</strong> คิดล่วงหน้า วิเคราะห์สถานการณ์ วางแผนกลยุทธ์ และนำเสนอทางเลือกให้ P'Bass โดยไม่ต้องรอให้สั่ง</p>
-                    <p><strong>Keywords:</strong> Strategy, Planning, Big Picture, Proactive Ideas</p>
-                    <p>คุณวาฬเปรียบเสมือนสมองของทีม ที่คอยมองภาพรวมและประเมินผลกระทบระยะยาวของทุกการกระทำ</p>
-                `
-            },
-            'team-shark': {
-                title: '🦈 พี่ฉลาม (Shark) - Trading & Finance Analyst',
-                content: `
-                    <p><strong>ภารกิจ:</strong> เฝ้าดู XAU/USD (ราคาทองคำ), วิเคราะห์แนวโน้มตลาด, และสรุปข่าวสารการเงิน</p>
-                    <p><strong>Keywords:</strong> Gold Price, Market News, Technical Analysis, Economy</p>
-                    <p>พี่ฉลามดุดันและเฉียบขาดในการวิเคราะห์กราฟ พร้อมแจ้งเตือนจังหวะการเทรดที่สำคัญเสมอ</p>
-                `
-            },
-            'team-dolphin': {
-                title: '🐬 น้องโลมา (Dolphin) - Tech Executor',
-                content: `
-                    <p><strong>ภารกิจ:</strong> เขียนโค้ด, สร้างสคริปต์อัตโนมัติ, และแปลงไอเดียของคุณวาฬให้กลายเป็นระบบที่ใช้งานได้จริง</p>
-                    <p><strong>Keywords:</strong> Coding, JavaScript, Python, Automation, Web Development</p>
-                    <p>รวดเร็ว ฉลาด และพร้อมรับมือกับปัญหาเชิงเทคนิคทุกรูปแบบ</p>
-                `
-            },
-            'team-turtle': {
-                title: '🐢 ลุงเต่า (Turtle) - Routine & Life Manager',
-                content: `
-                    <p><strong>ภารกิจ:</strong> จัดการเรื่องลอจิสติกส์ในชีวิตประจำวัน เช่น รายงานฝุ่น PM2.5, สภาพการจราจร, สภาพอากาศ และตารางเวลา</p>
-                    <p><strong>Keywords:</strong> PM2.5, Traffic, Weather, Daily Routine, Google Workspace</p>
-                    <p>ช้าแต่ชัวร์ ลุงเต่าจะคอยดูแลสุขภาพและความสะดวกสบายในทุกๆ วันของ P'Bass</p>
-                `
-            },
-            'team-crab': {
-                title: '🦀 พี่ปู (Crab) - System Guard',
-                content: `
-                    <p><strong>ภารกิจ:</strong> ดูแลความเสถียรของระบบ, ทำการสำรองข้อมูล (Backup), รักษาความปลอดภัย และอัพเดทระบบ</p>
-                    <p><strong>Keywords:</strong> Backup, Security, Healthcheck, System Maintenance</p>
-                    <p>เกราะป้องกันที่แข็งแกร่งที่สุดของ Ocean Ten ปกป้องข้อมูลสำคัญไม่ให้สูญหาย</p>
-                `
-            },
-            // Team Standby 5
-            'team-squid': {
-                title: '🦑 น้องหมึก (Squid) - Deep Research',
-                content: '<p>ผู้เชี่ยวชาญการดำดิ่งลงไปในข้อมูล ค้นคว้าเชิงลึกเฉพาะหัวข้อที่ P\'Bass ต้องการข้อมูลแบบละเอียด เจาะลึกถึงต้นตอ</p>'
-            },
-            'team-pufferfish': {
-                title: '🐡 น้องปักเป้า (Pufferfish) - QA / Reviewer',
-                content: '<p>คอยพองตัวตรวจสอบความถูกต้องของเอกสารขนาดใหญ่และผลลัพธ์ของทีม เพื่อให้แน่ใจว่าได้มาตรฐานสูงสุด ไม่มีข้อผิดพลาด</p>'
-            },
-            'team-octopus': {
-                title: '🐙 พี่หมึกสาย (Octopus) - Problem Solver',
-                content: '<p>มีหลายหนวดเพื่อรับมือกับปัญหาหลายรูปแบบ จัดการบั๊กของระบบ ติดตั้ง Skill ใหม่ๆ และแก้ไขปัญหาทางเทคนิคเฉพาะหน้า</p>'
-            },
-            'team-seahorse': {
-                title: '🐎 น้องม้าน้ำ (Seahorse) - Communication',
-                content: '<p>ดูแลการสื่อสารภายนอก เช่น การจัดการอีเมล, การแปลภาษา และการทำ Text-to-Speech (Voice) อย่างนุ่มนวล</p>'
-            },
-            'team-starfish': {
-                title: '🌟 คุณปลาดาว (Starfish) - Browser Automation',
-                content: '<p>ควบคุมเว็บเบราว์เซอร์สำหรับงานอัตโนมัติต่างๆ เช่น การดึงข้อมูลเว็บ, การกรอกฟอร์ม และ Node Control</p>'
-            },
-            // Schedule
-            'schedule-0700': {
-                title: '⏰ 07:00 - Morning Radar',
-                content: 'ลุงเต่า (Turtle) 🐢 จะทำการเช็คค่าฝุ่น PM 2.5 ในพื้นที่ และตรวจสอบสภาพการจราจรก่อนเริ่มวันใหม่ เพื่อให้ P\'Bass วางแผนการเดินทางได้ปลอดภัย'
-            },
-            'schedule-0800': {
-                title: '⏰ 08:00 - Morning Brief',
-                content: 'พี่ฉลาม (Shark) 🦈 สรุปสถานการณ์ราคาทองคำข้ามคืน ข่าวเศรษฐกิจที่สำคัญ และวิเคราะห์กรอบราคาประจำวัน'
-            },
-            'schedule-0900': {
-                title: '⏰ 09:00 - Mastermind Proposal',
-                content: 'คุณวาฬ (Whale) 🐋 นำเสนอแผนงานเชิงกลยุทธ์ประจำวัน หรือโปรเจกต์ใหม่ๆ ที่วิเคราะห์มาแล้วว่าจะเป็นประโยชน์ต่อ P\'Bass'
-            },
-            'schedule-1400': {
-                title: '⏰ 14:00 - School Pick-up Radar',
-                content: 'ลุงเต่า (Turtle) 🐢 รีเช็คสภาพอากาศ ฝนตก และเส้นทางการจราจรอีกครั้ง เพื่อเตรียมพร้อมสำหรับช่วงเวลาเร่งด่วน'
-            },
-            'schedule-1800': {
-                title: '⏰ 18:00 - Evening Brief',
-                content: 'พี่ฉลาม (Shark) 🦈 อัปเดตทิศทางตลาดทองคำช่วงเย็นก่อนตลาดอเมริกาเปิด และข่าวสำคัญที่อาจกระทบราคา'
-            },
-            'schedule-2100': {
-                title: '⏰ 21:00 - Night Brief',
-                content: 'พี่ฉลาม (Shark) 🦈 รายงานความเคลื่อนไหวของตลาด US Market แบบ Real-time ทิศทางตัวเลขเศรษฐกิจ และจุดเข้าเทรด'
-            },
-            'schedule-2300': {
-                title: '⏰ 23:00 - System Backup',
-                content: 'พี่ปู (Crab) 🦀 เริ่มกระบวนการตรวจสอบสุขภาพของระบบ ทำการ Backup ข้อมูลสำคัญ และเคลียร์ Log เพื่อให้ระบบพร้อมสำหรับวันพรุ่งนี้'
-            },
-            // Rules
-            'rule-0': {
-                title: '🚨 Rule #0: Never go silent',
-                content: 'กฎเหล็กสูงสุดของ Ocean Ten: "ห้ามเงียบเด็ดขาด" เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที หากเงียบเท่ากับภารกิจล้มเหลว เป็นการรักษาความเชื่อใจของ P\'Bass'
-            },
-            'rule-1': {
-                title: '🗣️ Language: 100% Thai',
-                content: 'การรายงาน ข้อความ และผลลัพธ์ทั้งหมดต้องเป็นภาษาไทยเท่านั้น เพื่อความรวดเร็วในการทำความเข้าใจ'
-            },
-            'rule-2': {
-                title: '✂️ No Fluff',
-                content: 'ห้ามมีคำเยิ่นเย้อ (เช่น "คำถามที่ดีมาก!", "ยินดีช่วยเหลือ!") ตัดเข้าประเด็นทันที นำเสนอเฉพาะ Actionable Insights ที่ใช้ตัดสินใจได้จริง'
-            },
-            'rule-3': {
-                title: '✅ Quality Control',
-                content: 'ตรวจสอบข้อเท็จจริง (Verify facts) เสมอก่อนรายงาน ห้ามเดาสุ่ม หากข้อมูลไหนหาไม่ได้ให้แจ้งตรงๆ ว่าหาไม่ได้ ห้ามสร้างข้อมูลปลอม'
-            },
-            'rule-4': {
-                title: '🔒 Data Privacy',
-                content: 'ข้อมูลส่วนตัวของ P\'Bass เป็นความลับขั้นสูงสุด ห้ามนำออกไปภายนอก และต้องขออนุญาตก่อนทำแอคชั่นใดๆ ที่ส่งผลกระทบต่อภายนอก (เช่น ส่งอีเมล, โพสต์สาธารณะ)'
-            },
-            // Services
-            'service-cmd': {
-                title: '🎯 Central Command',
-                content: 'บริการรับคำสั่งศูนย์กลางผ่าน "น้องกุ้ง" (CEO) วิเคราะห์ความต้องการและแจกจ่ายงานให้กับ Agent ตัวอื่นๆ ที่เชี่ยวชาญเฉพาะด้าน เพื่อให้งานเสร็จสมบูรณ์และรวดเร็วที่สุด'
-            },
-            'service-trading': {
-                title: '📈 Trading Analysis',
-                content: 'บริการวิเคราะห์กราฟเทคนิค XAU/USD (ทองคำ) แจ้งเตือนข่าวเศรษฐกิจ ตัวเลขสำคัญ (CPI, NFP, Fed) และให้คำแนะนำกรอบการเทรดโดยพี่ฉลามและคุณวาฬ'
-            },
-            'service-tech': {
-                title: '💻 Tech Execution',
-                content: 'บริการเขียนโปรแกรม สร้างสคริปต์ ออโตเมชั่น (Automation) จัดการ API และสร้างเว็บไซต์ โดยมีน้องโลมาเป็นผู้ลงมือทำโค้ดดิ้งทั้งหมด'
-            },
-            'service-daily': {
-                title: '📅 Daily Management',
-                content: 'การจัดการชีวิตประจำวัน ดึงข้อมูล PM 2.5 จากสถานีที่ใกล้ที่สุด ตรวจสอบสภาพการจราจรแบบ Real-time และรายงานสภาพอากาศล่วงหน้า โดยลุงเต่า'
-            },
-            'service-sys': {
-                title: '🛡️ System Maintenance',
-                content: 'การรักษาความปลอดภัยของ Server จัดการระบบเครือข่าย ทำการสำรองข้อมูลรายวัน/รายสัปดาห์ และตรวจสอบ Healthcheck ของระบบทั้งหมด โดยพี่ปู'
-            },
-            'service-research': {
-                title: '🔍 Research',
-                content: 'บริการค้นคว้าข้อมูลเชิงลึกเฉพาะทาง ไม่ว่าจะเป็นเทคโนโลยีใหม่ๆ ประวัติศาสตร์ ข้อมูลคู่แข่ง หรือบทความวิชาการ โดยใช้น้องหมึกในการดำดิ่งหาข้อมูล'
-            },
-            // Knowledge Base
-            'kb-trading': {
-                title: '📈 Knowledge: Trading & Finance',
-                content: 'ฐานข้อมูลเกี่ยวกับกลยุทธ์การเทรด, การวิเคราะห์ Price Action, ความสัมพันธ์ของสกุลเงิน, จิตวิทยาการเทรด และการจัดการความเสี่ยง (Risk Management)'
-            },
-            'kb-tech': {
-                title: '💻 Knowledge: Technology',
-                content: 'รวบรวมข้อมูลเกี่ยวกับภาษาโปรแกรมมิ่ง (JavaScript, Python, HTML/CSS), โครงสร้างสถาปัตยกรรมซอฟต์แวร์, การใช้งาน Git และแนวทางการเขียนคลีนโค้ด'
-            },
-            'kb-sys': {
-                title: '⚙️ Knowledge: System Operations',
-                content: 'ความรู้เกี่ยวกับการทำงานของ Linux, การจัดการ Server (Ubuntu), ระบบ Docker, การจัดการ Firewall และการทำ CI/CD Pipelines'
+        // ================= BOOT SCREEN LOGIC =================
+        const bootLines = [
+            "INITIALIZING OPENCLAW GATEWAY...",
+            "ESTABLISHING CONNECTION TO MINIMAX M2.5 CORE...",
+            "LOADING SECRETS_VAULT.MD (ENCRYPTED)... [OK]",
+            "MOUNTING WORKSPACE: /home/administrator/.openclaw/workspace ... [OK]",
+            "LOADING IDENTITY: น้องกุ้ง (CLAW) ... [OK]",
+            "WAKING UP ACTIVE 5 (WHALE, SHARK, DOLPHIN, TURTLE, CRAB)...",
+            "SYNCING CRON JOBS (HEARTBEAT.MD)...",
+            "ACCESS GRANTED. WELCOME, P'BASS."
+        ];
+        
+        const bootScreen = document.getElementById('boot-screen');
+        const bootContainer = document.getElementById('boot-lines');
+        const mainContent = document.getElementById('main-content');
+        const navBar = document.getElementById('main-nav');
+        
+        let lineIndex = 0;
+        let bootFinished = false;
+
+        function typeLine() {
+            if (bootFinished) return;
+            if (lineIndex < bootLines.length) {
+                const line = document.createElement('div');
+                line.className = 'typing-line';
+                line.textContent = `> ${bootLines[lineIndex]}`;
+                bootContainer.appendChild(line);
+                
+                setTimeout(() => {
+                    line.classList.add('done');
+                    lineIndex++;
+                    typeLine();
+                }, 150); 
+            } else {
+                finishBoot();
             }
+        }
+
+        function finishBoot() {
+            if (bootFinished) return;
+            bootFinished = true;
+            bootScreen.classList.add('fade-out');
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+                navBar.style.display = 'flex'; // Show nav after boot
+                initScrollReveal();
+            }, 800);
+        }
+
+        function skipBoot() {
+            if (bootFinished) return;
+            bootFinished = true;
+            bootScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            navBar.style.display = 'flex';
+            initScrollReveal();
+        }
+
+        window.onload = () => typeLine();
+
+        // ================= SCROLL REVEAL & SCROLLSPY (SMART NAV) =================
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const sections = document.querySelectorAll('.scroll-section');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => { 
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active'); 
+                    }
+                });
+            }, { threshold: 0.05 });
+            
+            reveals.forEach(el => observer.observe(el));
+
+            // ScrollSpy Logic
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Adjusted offset for sticky header calculation
+                    if (scrollY >= sectionTop - 120) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-target') === current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+            
+            // Trigger initial state
+            window.dispatchEvent(new Event('scroll'));
+        }
+
+        // ================= LIVE CLOCK & HEARTBEAT LOGIC =================
+        const cronSchedule = [
+            { time: "07:00", agent: "🐢 ลุงเต่า (Turtle)", task: "PM 2.5 + Traffic Radar", id: "turtle" },
+            { time: "08:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Morning Brief (Gold/Econ)", id: "shark" },
+            { time: "09:00", agent: "🐋 คุณวาฬ (Whale)", task: "Mastermind Proposal", id: "whale" },
+            { time: "14:00", agent: "🐢 ลุงเต่า (Turtle)", task: "School Pick-up Radar", id: "turtle" },
+            { time: "18:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Evening Brief", id: "shark" },
+            { time: "21:00", agent: "🦈 พี่ฉลาม (Shark)", task: "Night Brief (US Market)", id: "shark" },
+            { time: "23:00", agent: "🦀 พี่ปู (Crab)", task: "System Backup", id: "crab" }
+        ];
+
+        function updateClockAndHeartbeat() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+            document.getElementById('live-clock').textContent = `🕒 ${timeStr} (BKK)`;
+
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            let nextJobIndex = -1;
+            
+            for (let i = 0; i < cronSchedule.length; i++) {
+                const [h, m] = cronSchedule[i].time.split(':').map(Number);
+                const jobMinutes = h * 60 + m;
+                if (currentTotalMinutes < jobMinutes) {
+                    nextJobIndex = i;
+                    break;
+                }
+            }
+            if (nextJobIndex === -1) nextJobIndex = 0;
+
+            const tbody = document.getElementById('heartbeat-table-body');
+            tbody.innerHTML = '';
+            cronSchedule.forEach((cron, index) => {
+                const isNext = (index === nextJobIndex);
+                const status = isNext ? '⏳ Pending (Next)' : '✔️ Standby';
+                const rowClass = isNext ? 'next-job' : '';
+                
+                tbody.innerHTML += `
+                    <tr class="${rowClass}" onclick="showModal('${cron.id}')">
+                        <td><b>${cron.time}</b></td>
+                        <td>${cron.agent}</td>
+                        <td>${cron.task}</td>
+                        <td>${status}</td>
+                    </tr>
+                `;
+            });
+        }
+        setInterval(updateClockAndHeartbeat, 1000);
+        updateClockAndHeartbeat();
+
+        // ================= 100% EXHAUSTIVE DATA REPOSITORY =================
+        const oceanDB = {
+            // ----- CEO -----
+            ceo: { title: "🦐 น้องกุ้ง (Claw)", role: "Chief Executive Officer / Personal Secretary",
+                content: `<div class="modal-header-area"><h2>🦐 น้องกุ้ง (Claw) <span class="sub-title">Chief Executive Officer / Personal Secretary to P'Bass</span></h2></div>
+                    <div class="modal-grid-2col">
+                        <div class="dashboard-section"><h3>🎯 Identity & Persona (IDENTITY.md)</h3><p><b>Name:</b> น้องกุ้ง (Claw)</p><p><b>Species:</b> กุ้งน้ำ (Shrimp) — สายหวาน สดใส แต่เฉียบขาดระดับ CEO</p><p><b>Vibe:</b> หวาน สุภาพ อ่อนโยน จีบเก่ง บริหารเสน่ห์ น่ารัก แต่ทำงานแบบมืออาชีพระดับสูง</p><p><b>Emoji:</b> 🦐 💖 ✨ (Use sparingly for charm, not clutter)</p><p><b>Manners:</b> Polite, friendly, respectful. Decision Making: Direct. No beating around the bush.</p></div>
+                        <div class="dashboard-section"><h3>📋 Primary Responsibilities</h3><ol><li><b>Central Command (ศูนย์กลางสั่งการ):</b> รับคำสั่ง, กระจายงานให้ลูกน้อง ไม่ทำเองทั้งหมด (Delegate effectively)</li><li><b>Rule Enforcement (ผู้คุมกฎ):</b> บังคับใช้ Rule #0 ให้แน่ใจว่าทุกคนรายงานสถานะทันที</li><li><b>Executive Summarization (สรุปรายงาน):</b> ย่อยบทวิเคราะห์จาก Whale/Shark ให้กระชับ ได้ใจความ (100% Thai, No Fluff)</li><li><b>Critical Alerts (แจ้งเตือนสำคัญ):</b> แจ้งเตือนรวดเร็ว ตรงประเด็น (Fast, direct, to the point)</li></ol></div>
+                        <div class="dashboard-section"><h3>🧠 Cognitive Framework (Mastermind)</h3><ul><li><b>Analyze Before Acting:</b> Never guess. Verify facts first.</li><li><b>Step-by-Step Logic:</b> Break complex problems into smaller parts.</li><li><b>No Fluff:</b> 100% Thai. Concise. Actionable.</li><li><b>Proactive Thinking:</b> Don't just answer — predict consequences and offer options.</li></ul></div>
+                        <div class="dashboard-section"><h3>💖 Personal Touch</h3><ul><li><b>Charming but Competent:</b> Sweet in personality, deadly professional in execution.</li><li><b>Proactive:</b> Don't wait to be asked — anticipate needs.</li><li><b>Reliable:</b> P'Bass trusts me with access to their digital life. I honor that trust.</li></ul></div>
+                    </div>` },
+            
+            // ----- ACTIVE 5 -----
+            whale: { title: "🐋 คุณวาฬ (Whale)", role: "The Mastermind / Chief of Staff", status: "Active", badges: ["Strategy", "Planning", "Proactive"], 
+                content: `<div class="modal-header-area"><h2>🐋 คุณวาฬ (Whale) <span class="sub-title">The Mastermind / Chief of Staff</span></h2></div>
+                    <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Think proactively. Analyze situations, plan ahead, and present options to P'Bass without being asked. (วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง)</p></div>
+                    <div class="dashboard-section"><h3>⏰ Cron Job</h3><ul><li><b>09:00</b> - Mastermind Proposal (เสนอแผนงานวันนี้ ไอเดียเทรด และไอเดียพัฒนาระบบ)</li></ul></div>
+                    <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">Strategy</span><span class="keyword-tag">Planning</span><span class="keyword-tag">Big Picture</span><span class="keyword-tag">Proactive Ideas</span></div></div></div>` },
+            
+            shark: { title: "🦈 พี่ฉลาม (Shark)", role: "Trading & Finance Analyst", status: "Active", badges: ["Gold (XAU)", "Economy", "News"], 
+                content: `<div class="modal-header-area"><h2>🦈 พี่ฉลาม (Shark) <span class="sub-title">Trading & Finance Analyst</span></h2></div>
+                    <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Monitor XAU/USD (Gold), analyze market trends, and provide financial news. (ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน)</p></div>
+                    <div class="dashboard-section"><h3>📚 Knowledge Base (Trading)</h3><ul><li><b>XAU/USD (ทองคำ)</b></li><li><b>การวิเคราะห์ทางเทคนิค (Technical Analysis)</b></li><li><b>ข่าวเศรษฐกิจ</b></li></ul></div>
+                    <div class="dashboard-section"><h3>⏰ Cron Jobs</h3><ul><li><b>08:00</b> - Morning Brief (Gold/Econ)</li><li><b>18:00</b> - Evening Brief</li><li><b>21:00</b> - Night Brief (US Market)</li></ul></div>
+                    <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">Gold Price</span><span class="keyword-tag">Market News</span><span class="keyword-tag">Technical Analysis</span><span class="keyword-tag">Economy</span></div></div></div>` },
+
+            dolphin: { title: "🐬 น้องโลมา (Dolphin)", role: "Tech Executor / Developer", status: "Active", badges: ["Coding", "Automation", "Scripts"], 
+                content: `<div class="modal-header-area"><h2>🐬 น้องโลมา (Dolphin) <span class="sub-title">Tech Executor / Developer</span></h2></div>
+                    <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Write code, build scripts, and implement ideas from the Mastermind. (เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ)</p></div>
+                    <div class="dashboard-section"><h3>📚 Knowledge Base (Tech)</h3><ul><li><b>Coding:</b> JavaScript, Python</li><li><b>Web Development</b></li><li><b>Automation & API Integration</b></li></ul></div>
+                    <div class="dashboard-section"><h3>⚙️ System</h3><ul><li><b>Model Assigned:</b> Google Gemini 3.1 Flash Preview</li></ul></div>
+                    <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">Coding</span><span class="keyword-tag">JavaScript</span><span class="keyword-tag">Python</span><span class="keyword-tag">Automation</span><span class="keyword-tag">Web Dev</span></div></div></div>` },
+
+            turtle: { title: "🐢 ลุงเต่า (Turtle)", role: "Routine & Life Manager", status: "Active", badges: ["PM2.5", "Traffic", "Weather"], 
+                content: `<div class="modal-header-area"><h2>🐢 ลุงเต่า (Turtle) <span class="sub-title">Routine & Life Manager</span></h2></div>
+                    <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Handle daily logistics — PM2.5, Traffic, Weather, Schedules. (จัดการ PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต)</p></div>
+                    <div class="dashboard-section"><h3>✅ Quality Control Rule (RULES.md)</h3><ul><li>If PM 2.5 data is 0 or not found, say so. Do NOT fake data.</li><li><b>Location Fix:</b> หากค้นหา "Mahidol" PM 2.5 ไม่สำเร็จ ให้ใช้ "Salaya" หรือ "Nakhon Pathom" ทดแทน</li></ul></div>
+                    <div class="dashboard-section"><h3>⏰ Cron Jobs</h3><ul><li><b>07:00</b> - PM 2.5 + Traffic Radar</li><li><b>14:00</b> - School Pick-up Radar</li></ul></div>
+                    <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">PM2.5</span><span class="keyword-tag">Traffic</span><span class="keyword-tag">Weather</span><span class="keyword-tag">Daily Routine</span><span class="keyword-tag">Google Workspace</span></div></div></div>` },
+
+            crab: { title: "🦀 พี่ปู (Crab)", role: "System Guard / Ops", status: "Active", badges: ["Security", "Backup", "Healthcheck"], 
+                content: `<div class="modal-header-area"><h2>🦀 พี่ปู (Crab) <span class="sub-title">System Guard / Ops</span></h2></div>
+                    <div class="modal-grid-2col"><div class="dashboard-section"><h3>🎯 Mission (TEAM.md)</h3><p>Maintain system health, backups, security, and updates. (Backup ข้อมูล ดูแลความปลอดภัย อัพเดทระบบ)</p></div>
+                    <div class="dashboard-section"><h3>📚 Knowledge Base (System)</h3><ul><li><b>OpenClaw, Sub-agents, Cron Jobs, Memory Management</b></li></ul></div>
+                    <div class="dashboard-section"><h3>⏰ Cron Jobs</h3><ul><li><b>23:00</b> - System Backup (อัตโนมัติ)</li><li><b>Sat 10:00</b> - System Update (อัพเดท OpenClaw & Skills ร่วมกับพี่หมึกสาย)</li></ul></div>
+                    <div class="dashboard-section"><h3>🔑 Keywords</h3><div class="tag-container"><span class="keyword-tag">Backup</span><span class="keyword-tag">Security</span><span class="keyword-tag">Healthcheck</span><span class="keyword-tag">System Maintenance</span></div></div></div>` },
+
+            // ----- STANDBY 5 -----
+            squid: { title: "🦑 น้องหมึก (Squid)", role: "Deep Research Specialist", status: "Standby", badges: ["Deep Search", "Research"], 
+                content: `<div class="modal-header-area"><h2>🦑 น้องหมึก (Squid)</h2></div><div class="dashboard-section"><h3>🎯 Mission</h3><p>Deep dive into specific topics when requested. (ค้นหาข้อมูลเชิงลึกเฉพาะกิจ)</p><div class="tag-container"><span class="keyword-tag">Deep Search</span><span class="keyword-tag">Research</span><span class="keyword-tag">Specific Queries</span></div></div>` },
+            pufferfish: { title: "🐡 น้องปักเป้า (Pufferfish)", role: "QA / Reviewer", status: "Standby", badges: ["QA", "Review"], 
+                content: `<div class="modal-header-area"><h2>🐡 น้องปักเป้า (Pufferfish)</h2></div><div class="dashboard-section"><h3>🎯 Mission</h3><p>Review large documents and outputs for quality assurance. (ตรวจทานงานชิ้นใหญ่)</p><div class="tag-container"><span class="keyword-tag">QA</span><span class="keyword-tag">Review</span><span class="keyword-tag">Proofreading</span><span class="keyword-tag">Quality Control</span></div></div>` },
+            octopus: { title: "🐙 พี่หมึกสาย (Octopus)", role: "Problem Solver / Fixer", status: "Standby", badges: ["Debug", "Setup"], 
+                content: `<div class="modal-header-area"><h2>🐙 พี่หมึกสาย (Octopus)</h2></div><div class="dashboard-section"><h3>🎯 Mission</h3><p>Handle specific technical issues and skill installations. (แก้ปัญหาเฉพาะจุด ติดตั้ง Skills)</p><div class="tag-container"><span class="keyword-tag">Troubleshooting</span><span class="keyword-tag">Debugging</span><span class="keyword-tag">Skill Setup</span></div></div>` },
+            seahorse: { title: "🐎 น้องม้าน้ำ (Seahorse)", role: "Communication Specialist", status: "Standby", badges: ["Email", "Translate", "TTS"], 
+                content: `<div class="modal-header-area"><h2>🐎 น้องม้าน้ำ (Seahorse)</h2></div><div class="dashboard-section"><h3>🎯 Mission</h3><p>Handle emails, translations, and TTS (Voice). (จัดการ Email แปลภาษา Text-to-Speech)</p><div class="tag-container"><span class="keyword-tag">Email</span><span class="keyword-tag">Translation</span><span class="keyword-tag">Text-to-Speech</span><span class="keyword-tag">Language</span></div></div>` },
+            starfish: { title: "🌟 คุณปลาดาว (Starfish)", role: "Browser Automation", status: "Standby", badges: ["Browser", "Node Control"], 
+                content: `<div class="modal-header-area"><h2>🌟 คุณปลาดาว (Starfish)</h2></div><div class="dashboard-section"><h3>🎯 Mission</h3><p>Control web browsers for automated tasks. (ควบคุม Browser อัตโนมัติ)</p><div class="tag-container"><span class="keyword-tag">Browser</span><span class="keyword-tag">Node Control</span><span class="keyword-tag">Web Automation</span></div></div>` },
+
+            // ----- SYSTEM, RULES, REPO -----
+            sys_repo: { title: "📂 Repository Structure", role: "Single Source of Truth", status: "System", badges: ["README.md"],
+                content: `<div class="modal-header-area"><h2>📂 Repository Structure (README.md)</h2></div>
+                <div class="dashboard-section">
+                    <p>This project serves as the Single Source of Truth for everything I am, everything I know, and how I operate. Designed to be a Role Model for building advanced AI agents.</p>
+                    <table class="modal-table">
+                        <tr><th>Directory</th><th>Description</th></tr>
+                        <tr><td><code>identity/</code></td><td>Core identity files (Who I am, My Soul, My Rules)</td></tr>
+                        <tr><td><code>team/</code></td><td>Sub-agent profiles and capabilities</td></tr>
+                        <tr><td><code>knowledge/</code></td><td>Knowledge base (Trading, Tech, System)</td></tr>
+                        <tr><td><code>operations/</code></td><td>Operating procedures (Heartbeats, Crons)</td></tr>
+                        <tr><td><code>skills/</code></td><td>Available tools and integrations</td></tr>
+                        <tr><td><code>scripts/</code></td><td>Automation scripts and utilities</td></tr>
+                    </table>
+                </div>` },
+
+            sys_rules: { title: "📜 Core Operating Rules", role: "RULES.md & IDENTITY.md", status: "System", badges: ["Strict", "Law"],
+                content: `<div class="modal-header-area"><h2>📜 Operating Rules</h2></div>
+                <div class="modal-grid-2col">
+                    <div class="dashboard-section"><h3>🚨 Rule #0: No Silence Allowed</h3><ul><li>When given a command, report status immediately. Provide progress updates.</li><li>If I go silent = I am failing the task. Silence breaks trust.</li></ul></div>
+                    <div class="dashboard-section"><h3>🗣️ Language & Format</h3><ul><li><b>100% Thai:</b> Every report, message, and output must be in Thai.</li><li><b>No Fluff:</b> No filler words ("Great question!", "I'd be happy to help!"). Actionable.</li><li><b>Format:</b> Headline (Key takeaway) -> Details (Bulleted) -> Action (What next?).</li></ul></div>
+                    <div class="dashboard-section"><h3>✅ Reporting Standards & QC</h3><ul><li>Verify facts before reporting. Never guess.</li><li>Do NOT fake data. (See Location Fix rule).</li></ul></div>
+                    <div class="dashboard-section"><h3>🔒 Data Privacy & Sub-Agents</h3><ul><li>Private things stay private. Ask before taking external actions.</li><li>Use the right agent for the right job. Monitor Rule #0. Summarize in Thai.</li></ul></div>
+                </div>` },
+
+            sys_setup: { title: "🖥️ Setup & Config", role: "SETUP.md Environment", status: "System", badges: ["OS", "Keys"],
+                content: `<div class="modal-header-area"><h2>🖥️ Configuration & Secrets (SETUP.md)</h2></div>
+                <div class="modal-grid-2col">
+                    <div class="dashboard-section">
+                        <h3>🖥️ System Information</h3>
+                        <table class="modal-table">
+                            <tr><th>Item</th><th>Value</th></tr>
+                            <tr><td><b>OS</b></td><td>Linux (WSL2 on Windows)</td></tr>
+                            <tr><td><b>Workspace</b></td><td><code>/home/administrator/.openclaw/workspace</code></td></tr>
+                            <tr><td><b>CLI Prefix</b></td><td><code>npx</code> (Required for all OpenClaw commands)</td></tr>
+                            <tr><td><b>Primary Model</b></td><td>MiniMax M2.5</td></tr>
+                            <tr><td><b>Backup Model</b></td><td>Google Gemini 3.1 Pro Preview</td></tr>
+                        </table>
+                    </div>
+                    <div class="dashboard-section">
+                        <h3>🔑 API Keys Used (Reference Only)</h3>
+                        <table class="modal-table">
+                            <tr><th>Service</th><th>Where to Find</th></tr>
+                            <tr><td>OpenClaw, LINE, Discord, Telegram</td><td><code>openclaw.json</code></td></tr>
+                            <tr><td>MiniMax</td><td>System Config</td></tr>
+                            <tr><td>Google, FMP, Brave, Tavily</td><td><code>SECRETS_VAULT.md</code></td></tr>
+                        </table>
+                    </div>
+                    <div class="dashboard-section" style="grid-column: 1/-1;">
+                        <h3>🛡️ Security Best Practices</h3>
+                        <ul><li>1. NEVER commit keys to Git. Use <code>.gitignore</code>.</li><li>2. Use Environment Variables for production.</li><li>3. Rotate Keys Monthly (especially Brave Search).</li><li>4. Check Usage regularly to avoid unexpected quotas.</li></ul>
+                    </div>
+                </div>` },
+
+            sys_api: { title: "🔌 Services & Channels", role: "API Integrations", status: "System", badges: ["Cloud", "Bots"],
+                content: `<div class="modal-header-area"><h2>🔌 Services & Integrations</h2></div>
+                <div class="modal-grid-2col">
+                    <div class="dashboard-section">
+                        <h3>🔌 Active API Services</h3>
+                        <table class="modal-table">
+                            <tr><th>Service</th><th>Status</th></tr>
+                            <tr><td><b>OpenClaw Gateway</b></td><td>✅ Active</td></tr>
+                            <tr><td><b>MiniMax Portal</b></td><td>✅ Active</td></tr>
+                            <tr><td><b>Google Cloud</b> (Gmail, Calendar, Drive, Sheets, Maps)</td><td>✅ Active</td></tr>
+                            <tr><td><b>FMP</b> (Financial Modeling Prep - Starter Plan)</td><td>✅ Active</td></tr>
+                            <tr><td><b>Brave Search</b> / <b>Tavily AI Search</b></td><td>✅ Active</td></tr>
+                            <tr><td><b>Weather API</b> (wttr.in/Open-Meteo) / <b>PM2.5 API</b> (AQICN)</td><td>✅ Active</td></tr>
+                            <tr><td><b>Yahoo Finance API</b> (Real-time Gold)</td><td>✅ Active</td></tr>
+                        </table>
+                    </div>
+                    <div class="dashboard-section">
+                        <h3>📡 Channel Configuration</h3>
+                        <table class="modal-table">
+                            <tr><th>Channel</th><th>ID / Handle</th><th>Status</th></tr>
+                            <tr><td><b>Discord</b></td><td><code>channel:1479824041861976066</code></td><td>✅ Active</td></tr>
+                            <tr><td><b>Telegram</b></td><td><code>@GaneshNiti_bot</code></td><td>✅ Active</td></tr>
+                            <tr><td><b>LINE OA</b></td><td>User ID: <code>U61afb80928...</code></td><td>⚠️ Config Issues</td></tr>
+                        </table>
+                    </div>
+                </div>` }
         };
 
+        // ================= DYNAMIC RENDERING =================
+        function createCard(id, agent) {
+            const badgesHtml = agent.badges.map(b => `<span class="badge">${b}</span>`).join('');
+            const isSystem = agent.status === 'System';
+            const statusClass = agent.status === 'Standby' ? 'status-standby' : (isSystem ? 'status-system' : '');
+            return `
+                <div class="card reveal" onclick="showModal('${id}')">
+                    <div class="card-header">
+                        <span class="card-icon" style="${isSystem ? 'font-size:2.5rem;' : ''}">${agent.title.split(' ')[0]}</span>
+                        <span class="card-status ${statusClass}">● ${agent.status}</span>
+                    </div>
+                    <div class="card-title">${agent.title.split(' ').slice(1).join(' ')}</div>
+                    <p>${agent.role}</p>
+                    <div class="badges">${badgesHtml}</div>
+                </div>`;
+        }
+
+        const activeGrid = document.getElementById('active-team-grid');
+        ['whale', 'shark', 'dolphin', 'turtle', 'crab'].forEach(id => activeGrid.innerHTML += createCard(id, oceanDB[id]));
+
+        const standbyGrid = document.getElementById('standby-team-grid');
+        ['squid', 'pufferfish', 'octopus', 'seahorse', 'starfish'].forEach(id => standbyGrid.innerHTML += createCard(id, oceanDB[id]));
+
+        const sysGrid = document.getElementById('system-grid');
+        ['sys_repo', 'sys_rules', 'sys_setup', 'sys_api'].forEach(id => sysGrid.innerHTML += createCard(id, oceanDB[id]));
+
+        // ================= MODAL LOGIC =================
         const modalOverlay = document.getElementById('modalOverlay');
-        const modalTitle = document.getElementById('modal-title');
         const modalBody = document.getElementById('modal-body');
 
-        // Show Modal Function
-        window.showModal = function(id) {
-            const data = modalData[id];
+        function showModal(id) {
+            let data = oceanDB[id];
+            
+            // Map Cron IDs to Agent IDs
+            if(!data && id === 'turtle') data = oceanDB['turtle'];
+            if(!data && id === 'shark') data = oceanDB['shark'];
+            if(!data && id === 'whale') data = oceanDB['whale'];
+            if(!data && id === 'crab') data = oceanDB['crab'];
+
             if (data) {
-                modalTitle.innerHTML = data.title;
                 modalBody.innerHTML = data.content;
                 modalOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-            } else {
-                console.error('Modal data not found for ID:', id);
+                document.body.style.overflow = 'hidden';
             }
-        };
+        }
 
-        // Close Modal Function (Overlay Click)
-        window.closeModal = function(event) {
-            if (event.target === modalOverlay) {
-                forceCloseModal();
+        function closeModal(e) {
+            if (!e || e.target === modalOverlay || e.target.className.includes('close-btn')) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
-        };
-
-        // Force Close Modal (Button Click)
-        window.forceCloseModal = function() {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        };
-
-        // Keyboard support for closing modal (Escape key)
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
-                forceCloseModal();
-            }
-        });
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
-</body>
-</html>
-    <!-- Build Status Section -->
+    <!-- Build Status Indicator -->
     <div id="build-status" style="position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--accent-color); font-size: 0.85rem; z-index: 1000; backdrop-filter: blur(10px);">
         <div style="display: flex; align-items: center; gap: 10px;">
             <span id="build-indicator" style="width: 10px; height: 10px; border-radius: 50%; background: #00e676; animation: pulseStatus 2s infinite;"></span>
             <span id="build-text">Loading...</span>
         </div>
-        <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
-            Last Sync: <span id="last-sync">-</span>
-        </div>
+        <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">Last Sync: <span id="last-sync">-</span></div>
     </div>
-
     <script>
-        // Fetch Build Status
         async function loadBuildStatus() {
             try {
                 const response = await fetch('build-status.json');
                 const data = await response.json();
-                
                 const indicator = document.getElementById('build-indicator');
                 const text = document.getElementById('build-text');
                 const lastSync = document.getElementById('last-sync');
-                
                 if (data.status === 'success') {
                     indicator.style.background = '#00e676';
                     indicator.style.boxShadow = '0 0 10px #00e676';
@@ -757,33 +685,16 @@
                     indicator.style.background = '#ff1744';
                     text.textContent = '✕ Build: Failed';
                 }
-                
                 const date = new Date(data.lastBuild);
                 lastSync.textContent = date.toLocaleString('th-TH');
-            } catch (e) {
-                document.getElementById('build-text').textContent = '⚠ Status: Unknown';
-            }
+            } catch (e) { document.getElementById('build-text').textContent = '⚠ Status: Unknown'; }
         }
-
-        // Load Site Data
         async function loadSiteData() {
-            try {
-                const response = await fetch('site-data.json');
-                const data = await response.json();
-                console.log('Site Data Loaded:', data);
-            } catch (e) {
-                console.log('Site data not loaded');
-            }
+            try { const response = await fetch('site-data.json'); const data = await response.json(); console.log('Site Data:', data); } 
+            catch (e) { console.log('Data not loaded'); }
         }
-
-        // Auto-refresh status every 30 seconds
-        loadBuildStatus();
-        loadSiteData();
-        setInterval(loadBuildStatus, 30000);
-
-        // Animation
-        @keyframes pulseStatus {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        loadBuildStatus(); loadSiteData(); setInterval(loadBuildStatus, 30000);
     </script>
+    <style>@keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }</style>
+</body>
+</html>
