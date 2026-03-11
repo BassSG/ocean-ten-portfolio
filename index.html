@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦐 Ocean Ten - AI Personal Assistant Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #8b5cf6;
+            --accent: #f43f5e;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(244, 63, 94, 0.1) 0%, transparent 40%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-emoji {
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-main), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Cards Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+
+        .team-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-card .role {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-card .desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-standby {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        /* Rules Section */
+        .rules-list {
+            list-style: none;
+        }
+
+        .rules-list li {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .rules-list li strong {
+            color: var(--accent);
+        }
+
+        /* Services Table */
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .services-table th,
+        .services-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .services-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .services-table td {
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-active {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .status-warning {
+            background: var(--warning);
+            box-shadow: 0 0 10px var(--warning);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4rem;
+        }
+
+        /* Section Titles */
+        section {
+            margin: 4rem 0;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Code Block */
+        pre {
+            background: #0d1117;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .grid, .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-emoji">🦐</span>
+                <h1>Ocean Ten</h1>
+            </div>
+            <nav>
+                <a href="#about">เกี่ยวกับ</a>
+                <a href="#team">ทีม</a>
+                <a href="#rules">กฎ</a>
+                <a href="#services">Services</a>
+                <a href="#contact">ติดต่อ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero" id="about">
+            <div class="hero-emoji">🌊</div>
+            <h2>Ocean Ten</h2>
+            <p>ทีม AI Personal Assistant ที่คิดแทนคุณ วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p>
+            <p style="color: var(--primary);">"ศูนย์กลางสั่งการ ที่คิดแทนคุณ"</p>
+        </section>
+
+        <!-- About CEO -->
+        <section>
+            <h2>🦐 เกี่ยวกับ CEO</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">🦐</div>
+                    <h3>น้องกุ้ง (Claw)</h3>
+                    <p>CEO ของทีม Ocean Ten สายหวานแต่เฉียบขาด จัดการทีม 10 ตัวอย่างมืออาชีพ</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🧠</div>
+                    <h3>ความฉลาด</h3>
+                    <p>ใช้ Mastermind Framework วิเคราะห์ก่อนตอบ คิดล่วงหน้า นำเสนอทางเลือก</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3>การส่งมอบ</h3>
+                    <p>รายงานเป็นภาษาไทย 100% กระชับ ได้ใจความ นำไปใช้ตัดสินใจได้จริง</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team -->
+        <section id="team">
+            <h2>👥 ทีม Ocean Ten</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Active 5 - ทำงานประจำทุกวัน</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-emoji">🐋</div>
+                    <h4>คุณวาฬ (Whale)</h4>
+                    <div class="role">The Mastermind</div>
+                    <p class="desc">วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดียโดยไม่ต้องสั่ง</p>
+                    <span class="badge badge-active">Active</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🦈</div>
+                    <h4>พี่ฉลาม (Shark)</h4>
+                    <div class="role">Trading Analyst</div>
+                    <p class="desc">ดูแลตลาดทองคำ XAU/USD วิเคราะห์ข่าวการเงิน</p>
+                    <span class="badge badge-active">Active</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🐬</div>
+                    <h4>น้องโลมา (Dolphin)</h4>
+                    <div class="role">Tech Executor</div>
+                    <p class="desc">เขียนโค้ด สร้างสคริปต์ พัฒนาระบบอัตโนมัติ</p>
+                    <span class="badge badge-active">Active</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🐢</div>
+                    <h4>ลุงเต่า (Turtle)</h4>
+                    <div class="role">Routine Manager</div>
+                    <p class="desc">PM2.5 จราจร สภาพอากาศ ตารางเวลาชีวิต</p>
+                    <span class="badge badge-active">Active</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🦀</div>
+                    <h4>พี่ปู (Crab)</h4>
+                    <div class="role">System Guard</div>
+                    <p class="desc">Backup ข้อมูล ดูแลความปลอดภัย อัพเดทระบบ</p>
+                    <span class="badge badge-active">Active</span>
+                </div>
+            </div>
+
+            <p style="color: var(--text-muted); margin: 2rem 0 1rem;">Standby 5 - รอเรียกใช้เฉพาะกิจ</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-emoji">🦑</div>
+                    <h4>น้องหมึก (Squid)</h4>
+                    <div class="role">Deep Research</div>
+                    <p class="desc">ค้นหาข้อมูลเชิงลึก</p>
+                    <span class="badge badge-standby">Standby</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🐡</div>
+                    <h4>น้องปักเป้า (Pufferfish)</h4>
+                    <div class="role">QA / Reviewer</div>
+                    <p class="desc">ตรวจทานงานชิ้นใหญ่</p>
+                    <span class="badge badge-standby">Standby</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🐙</div>
+                    <h4>พี่หมึกสาย (Octopus)</h4>
+                    <div class="role">Problem Solver</div>
+                    <p class="desc">แก้ปัญหาเฉพาะจุด</p>
+                    <span class="badge badge-standby">Standby</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🐎</div>
+                    <h4>น้องม้าน้ำ (Seahorse)</h4>
+                    <div class="role">Communication</div>
+                    <p class="desc">Email แปลภาษา TTS</p>
+                    <span class="badge badge-standby">Standby</span>
+                </div>
+                <div class="team-card">
+                    <div class="team-emoji">🌟</div>
+                    <h4>คุณปลาดาว (Starfish)</h4>
+                    <div class="role">Browser Automation</div>
+                    <p class="desc">ควบคุม Browser อัตโนมัติ</p>
+                    <span class="badge badge-standby">Standby</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules -->
+        <section id="rules">
+            <h2>⚡ กฎเหล็ก (Rules)</h2>
+            <ul class="rules-list">
+                <li>
+                    <strong>Rule #0: ห้ามเงียบเด็ดขาด!</strong><br>
+                    เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที ถ้าเงียบ = ทำงานไม่เสร็จ
+                </li>
+                <li>
+                    <strong>ภาษาไทย 100%</strong><br>
+                    ทุกรายงาน ทุกเอกสาร ต้องเป็นภาษาไทยเท่านั้น
+                </li>
+                <li>
+                    <strong>No Fluff</strong><br>
+                    ห้ามน้ำท่วมทุ่ง สรุปกระชับ นำไปใช้ตัดสินใจได้จริง
+                </li>
+                <li>
+                    <strong>ความถูกต้อง</strong><br>
+                    ถ้าข้อมูลไม่เจอ ต้องบอกว่าไม่เจอ ห้ามมั่วหรือเดาข้อมูล
+                </li>
+                <li>
+                    <strong>Proactive Thinking</strong><br>
+                    ไม่ใช่แค่ตอบคำถาม แต่ต้องวิเคราะห์ผลที่ตามมาและเสนอทางเลือก
+                </li>
+            </ul>
+        </section>
+
+        <!-- Services -->
+        <section id="services">
+            <h2>🔧 Services & Tools</h2>
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🤖 OpenClaw</td>
+                        <td>AI Assistant Platform</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>🧠 MiniMax M2.5</td>
+                        <td>Primary AI Model</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>📊 FMP</td>
+                        <td>Financial Data API</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>🔍 Brave Search</td>
+                        <td>Web Search</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>📧 Google Workspace</td>
+                        <td>Gmail, Calendar, Drive</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>💬 Discord</td>
+                        <td>Primary Channel</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                    <tr>
+                        <td>📱 LINE OA</td>
+                        <td>LINE Official Account</td>
+                        <td><span class="status-dot status-warning"></span> Config Issues</td>
+                    </tr>
+                    <tr>
+                        <td>📈 Yahoo Finance</td>
+                        <td>Gold Price Data (Free)</td>
+                        <td><span class="status-dot status-active"></span> Active</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <h2>📮 ติดต่อ</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">💬</div>
+                    <h3>Discord</h3>
+                    <p>Ocean Ten HQ</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📱</div>
+                    <h3>LINE OA</h3>
+                    <p>กำกำลังแก้ไข</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>bass1135@gmail.com</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>🦐 Ocean Ten - AI Personal Assistant Team</p>
+        <p>Created: 2026-03-11 | Last Updated: <span id="lastUpdate"></span></p>
+        <p style="margin-top: 0.5rem; opacity: 0.5;">Powered by MiniMax M2.5 with Cognitive Upgrade</p>
+    </footer>
+
+    <script>
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('th-TH', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
