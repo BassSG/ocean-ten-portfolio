@@ -221,4 +221,80 @@
     <script>
     const modalData = {
         home: { emoji: "🌊", title: "Ocean Ten", content: "<p>ทีม AI Personal Assistant ที่คิดแทนคุณ</p><p>วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p><p><strong>ศูนย์กลางสั่งการ ที่คิดแทนคุณ</strong></p>" },
-        hero: { emoji: "🌊", title: "Ocean Ten", content: "<p>ทีม AI Personal Assistant ที่คิดแทนคุ
+        hero: { emoji: "🌊", title: "Ocean Ten", content: "<p>ทีม AI Personal Assistant ที่คิดแทนคุ<p>ทีม AI Personal Assistant ที่คิดแทนคุณ วิเคราะห์ล่วงหน้า และนำเสนอทางเลือกที่ดีที่สุด</p>" },
+        ceo: { emoji: "🦐", title: "น้องกุ้ง (CEO)", content: "<p><strong>บทบาท:</strong> CEO ของทีม Ocean Ten</p><p><strong>ลักษณะ:</strong> สายหวาน สดใส แต่เฉียบขาดระดับ CEO</p><p><strong>หน้าที่:</strong> ศูนย์กลางสั่งการ รับคำสั่งจากพี่เบสแล้วกระจายงานให้ลูกน้อง</p><p><strong>Emoji:</strong> 🦐 💖 ✨</p>" },
+        cognitive: { emoji: "🧠", title: "Mastermind Framework", content: "<p><strong>กรอบความคิด:</strong> วิเคราะห์ก่อนตอบเสมอ</p><p><strong>ขั้นตอน:</strong></p><p>1. Analyze - ดึงข้อมูลความจริงก่อน</p><p>2. Step-by-Step - วางแผนเป็นลำดับ</p><p>3. No Fluff - ตอบเป็นภาษาไทย กระชับ</p><p>4. Proactive - คิดล่วงหน้า นำเสนอทางเลือก</p>" },
+        delivery: { emoji: "⚡", title: "การส่งมอบ", content: "<p><strong>ภาษา:</strong> ไทย 100%</p><p><strong>หลักการ:</strong> สั้น กระชับ ไม่เยิ่นเย้อ</p><p><strong>เป้าหมาย:</strong> Actionable Insights - ให้ข้อมูลที่นำไปใช้ตัดสินใจได้ทันที</p>" },
+        whale: { emoji: "🐋", title: "คุณวาฬ - The Mastermind", content: "<p><strong>บทบาท:</strong> ตัวคิดแทนพี่เบส!</p><p><strong>หน้าที่:</strong> วิเคราะห์ล่วงหน้า วางแผนกลยุทธ์ เสนอไอเดีย</p><p><strong>ความสามารถ:</strong> วิเคราะห์ข่าว ตลาดทอง หาจังหวะเทรด</p><p><strong>Status:</strong> Active (ทำงานจันทร์-ศุกร์)</p>" },
+        shark: { emoji: "🦈", title: "พี่ฉลาม - Trading Analyst", content: "<p><strong>บทบาท:</strong> ดูแลตลาดทองคำ</p><p><strong>หน้าที่:</strong> วิเคราะห์ XAU/USD แนวโน้มราคา</p><p><strong>งาน:</strong> Morning Brief, Evening Brief, Night Brief</p><p><strong>Status:</strong> Active</p>" },
+        dolphin: { emoji: "🐬", title: "น้องโลมา - Tech Executor", content: "<p><strong>บทบาท:</strong> เขียนโค้ด พัฒนาสคริปต์</p><p><strong>หน้าที่:</strong> รับไอเดียจากคุณวาฬแล้วลงมือทำ</p><p><strong>ความสามารถ:</strong> Python, JavaScript, OpenClaw Scripts</p><p><strong>Status:</strong> Active</p>" },
+        turtle: { emoji: "🐢", title: "ลุงเต่า - Routine Manager", content: "<p><strong>บทบาท:</strong> จัดการรายละเอียดชีวิตประจำวัน</p><p><strong>หน้าที่:</strong> เช็ค PM 2.5, จราจร, สภาพอากาศ</p><p><strong>งาน:</strong> 07:00 Radar, 14:00 รับลูก</p><p><strong>Status:</strong> Active</p>" },
+        crab: { emoji: "🦀", title: "พี่ปู - System Guard", content: "<p><strong>บทบาท:</strong> ดูแลความปลอดภัยระบบ</p><p><strong>หน้าที่:</strong> Backup ข้อมูล, Healthcheck</p><p><strong>งาน:</strong> 23:00 System Backup, เสาร์ System Update</p><p><strong>Status:</strong> Active</p>" },
+        squid: { emoji: "🦑", title: "น้องหมึก - Deep Research", content: "<p><strong>บทบาท:</strong> ค้นหาข้อมูลเชิงลึก</p><p><strong>หน้าที่:</strong> เจาะลึกข่าวเฉพาะหน้า</p><p><strong>Status:</strong> Standby (รอเรียกใช้)</p>" },
+        pufferfish: { emoji: "🐡", title: "น้องปักเป้า - QA/Reviewer", content: "<p><strong>บทบาท:</strong> ตรวจทานงานชิ้นใหญ่</p><p><strong>หน้าที่:</strong> QA Review, ตรวจสอบคุณภาพงาน</p><p><strong>Status:</strong> Standby</p>" },
+        octopus: { emoji: "🐙", title: "พี่หมึกสาย - Problem Solver", content: "<p><strong>บทบาท:</strong> แก้ปัญหาเฉพาะจุด</p><p><strong>หน้าที่:</strong> ติดตั้ง Skills, แก้ปัญหาระบบ</p><p><strong>Status:</strong> Standby</p>" },
+        seahorse: { emoji: "🐎", title: "น้องม้าน้ำ - Communication", content: "<p><strong>บทบาท:</strong> งานสื่อสาร</p><p><strong>หน้าที่:</strong> Email ล็อตใหญ่, แปลภาษา, TTS</p><p><strong>Status:</strong> Standby</p>" },
+        starfish: { emoji: "🌟", title: "คุณปลาดาว - Browser Automation", content: "<p><strong>บทบาท:</strong> ควบคุม Browser</p><p><strong>หน้าที่:</strong> Browser Automation, ดึงข้อมูลเว็บ</p><p><strong>Status:</strong> Standby</p>" },
+        "schedule-0700": { emoji: "🌫️", title: "07:00 - PM 2.5 + จราจร", content: "<p><strong>Agent:</strong> 🐢 ลุงเต่า</p><p><strong>งาน:</strong> เช็ค PM 2.5 ศาลายา และสภาพจราจร</p><p><strong>วัตถุประสงค์:</strong> เตรียมพร้อมก่อนพาลูกไปโรงเรียน</p>" },
+        "schedule-0800": { emoji: "📊", title: "08:00 - Morning Brief", content: "<p><strong>Agent:</strong> 🦈 พี่ฉลาม</p><p><strong>งาน:</strong> สรุปราคาทองคำ XAU/USD + ข่าวเศรษฐกิจ</p><p><strong>วัตถุประสงค์:</strong> เตรียมตัวเทรดช่วงเช้า</p>" },
+        "schedule-0900": { emoji: "💡", title: "09:00 - Mastermind Propose", content: "<p><strong>Agent:</strong> 🐋 คุณวาฬ</p><p><strong>งาน:</strong> เสนอแผนงานวันนี้ ไอเดียเทรด</p><p><strong>วัตถุประสงค์:</strong> นำเสนอทางเลือกให้พี่เบสตัดสินใจ</p>" },
+        "schedule-1400": { emoji: "🚗", title: "14:00 - รับลูก", content: "<p><strong>Agent:</strong> 🐢 ลุงเต่า</p><p><strong>งาน:</strong> เช็คจราจรและสภาพอากาศ</p><p><strong>วัตถุประสงค์:</strong> เตรียมออกไปรับลูก</p>" },
+        "schedule-1800": { emoji: "📈", title: "18:00 - Evening Brief", content: "<p><strong>Agent:</strong> 🦈 พี่ฉลาม</p><p><strong>งาน:</strong> สรุปข่าวค่ำและสถานการณ์ตลาด</p><p><strong>วัตถุประสงค์:</strong> เตรียมเทรดช่วงค่ำ</p>" },
+        "schedule-2100": { emoji: "🌙", title: "21:00 - Night Brief", content: "<p><strong>Agent:</strong> 🦈 พี่ฉลาม</p><p><strong>งาน:</strong> สรุปตลาด US Market และ Gold Futures</p><p><strong>วัตถุประสงค์:</strong> ประเมินแนวโน้มก่อนนอน</p>" },
+        "schedule-2300": { emoji: "💾", title: "23:00 - System Backup", content: "<p><strong>Agent:</strong> 🦀 พี่ปู</p><p><strong>งาน:</strong> Backup ข้อมูลอัตโนมัติ + Healthcheck</p><p><strong>วัตถุประสงค์:</strong> ปกป้องข้อมูลสำคัญ</p>" },
+        "schedule-sat": { emoji: "🔧", title: "เสาร์ 10:00 - System Update", content: "<p><strong>Agent:</strong> 🐙 พี่หมึกสาย + 🦀 พี่ปู</p><p><strong>งาน:</strong> อัพเดท OpenClaw และ Skills ทั้งหมด</p><p><strong>วัตถุประสงค์:</strong> รักษาระบบให้ทันสมัย</p>" },
+        "rule-0": { emoji: "⚡", title: "Rule #0: ห้ามเงียบเด็ดขาด!", content: "<p><strong>กฎ:</strong> เมื่อได้รับคำสั่ง ต้องรายงานสถานะทันที</p><p><strong>ความหมาย:</strong> ห้ามทิ้งช่วงเงียบหายไป ถ้างานยังไม่เสร็จต้องรายงานความคืบหน้า</p><p><strong>ผล:</strong> ถ้าเงียบ = ยังทำงานไม่เสร็จ (Fail)</p>" },
+        "rule-thai": { emoji: "🇹🇭", title: "ภาษาไทย 100%", content: "<p><strong>กฎ:</strong> ทุกรายงานต้องเป็นภาษาไทยเท่านั้น</p><p><strong>เหตุผล:</strong> พี่เบสชอบภาษาไทย</p>" },
+        "rule-fluff": { emoji: "✂️", title: "No Fluff", content: "<p><strong>กฎ:</strong> ห้ามน้ำท่วมทุ่ง สรุปกระชับ</p><p><strong>เป้าหมาย:</strong> Actionable Insights - อ่านแล้วได้ประโยชน์ นำไปใช้ตัดสินใจได้ทันที</p>" },
+        "rule-accurate": { emoji: "🎯", title: "ความถูกต้อง", content: "<p><strong>กฎ:</strong> ถ้าข้อมูลไม่เจอ ต้องบอกว่าไม่เจอ</p><p><strong>ห้าม:</strong> รายงานค่ามั่วหรือค่าเป็นศูนย์</p><p><strong>วิธีแก้:</strong> ใช้ข้อมูลพื้นที่ใกล้เคียงแทน</p>" },
+        "rule-proactive": { emoji: "🚀", title: "Proactive Thinking", content: "<p><strong>กฎ:</strong> ไม่ใช่แค่ตอบคำถาม แต่ต้องวิเคราะห์ผลที่ตามมา</p><p><strong>เป้าหมาย:</strong> นำเสนอทางเลือก (Options) เพื่อปิดงานให้เร็วที่สุด</p>" },
+        "service-openclaw": { emoji: "🤖", title: "OpenClaw", content: "<p><strong>Type:</strong> AI Assistant Platform</p><p><strong>Status:</strong> Active</p><p><strong>ความสามารถ:</strong> Sub-agents, Cron Jobs, Messaging</p>" },
+        "service-model": { emoji: "🧠", title: "MiniMax M2.5", content: "<p><strong>Type:</strong> Primary AI Model</p><p><strong>Status:</strong> Active</p><p><strong>จุดเด่น:</strong> เร็ว, ถูก, รองรับภาษาไทยดี</p>" },
+        "service-fmp": { emoji: "📈", title: "FMP (Financial Modeling Prep)", content: "<p><strong>Type:</strong> Financial Data API</p><p><strong>Status:</strong> Active</p><p><strong>ใช้:</strong> ดึงข้อมูลราคาทองคำ XAU/USD</p>" },
+        "service-brave": { emoji: "🦁", title: "Brave Search", content: "<p><strong>Type:</strong> Web Search</p><p><strong>Status:</strong> Active (Backup)</p><p><strong>ใช้:</strong> ค้นหาข่าวและข้อมูล</p>" },
+        "service-google": { emoji: "📧", title: "Google Workspace", content: "<p><strong>Type:</strong> Email + Calendar + Drive</p><p><strong>Status:</strong> Active</p><p><strong>ใช้:</strong> Gmail, Calendar, Drive, Maps</p>" },
+        "service-discord": { emoji: "💬", title: "Discord", content: "<p><strong>Type:</strong> Primary Channel</p><p><strong>Status:</strong> Active</p><p><strong>ใช้:</strong> สื่อสารกับพี่เบส</p>" },
+        "knowledge-trading": { emoji: "💰", title: "Trading Knowledge", content: "<p><strong>หัวข้อ:</strong> การเทรดทองคำ XAU/USD</p><p><strong>เนื้อหา:</strong> Technical Analysis, Fundamental Analysis, Risk Management</p><p><strong>แหล่งข้อมูล:</strong> FMP API, ข่าวเศรษฐกิจ</p>" },
+        "knowledge-tech": { emoji: "💻", title: "Tech Knowledge", content: "<p><strong>หัวข้อ:</strong> การเขียนโค้ดและ Automation</p><p><strong>เนื้อหา:</strong> Python, JavaScript, OpenClaw Scripts, Browser Automation</p>" },
+        "knowledge-system": { emoji: "⚙️", title: "System Knowledge", content: "<p><strong>หัวข้อ:</strong> OpenClaw และ Sub-agents</p><p><strong>เนื้อหา:</strong> การตั้งค่า, Skills, Cron Jobs, การใช้งาน</p>" }
+    };
+
+    function showModal(id) {
+        const modal = document.getElementById('modal');
+        const overlay = document.getElementById('modal-overlay');
+        const data = modalData[id];
+        
+        if (!data) return;
+        
+        document.getElementById('modal-emoji').textContent = data.emoji;
+        document.getElementById('modal-title').textContent = data.title;
+        document.getElementById('modal-content').innerHTML = data.content;
+        
+        overlay.classList.add('active');
+    }
+
+    function closeModal(event) {
+        if (event) event.preventDefault();
+        const overlay = document.getElementById('modal-overlay');
+        overlay.classList.remove('active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    </script>
+    
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <span class="modal-emoji" id="modal-emoji"></span>
+            <h3 id="modal-title"></h3>
+            <div class="modal-content" id="modal-content"></div>
+        </div>
+    </div>
+</body>
+</html>
