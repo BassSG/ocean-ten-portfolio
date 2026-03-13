@@ -299,24 +299,24 @@
             <div class="grid">
                 <div class="dashboard-section">
                     <h3>📊 ปริมาณทองคำ (ล่าสุด)</h3>
-                    <p style="font-size: 2rem; color: var(--gold); font-weight: bold;">1,073.57 ตัน</p>
-                    <p style="color: var(--neon-red);">+2.86 ตัน 📈 (วันนี้)</p>
+                    <p id="spdr-holdings" style="font-size: 2rem; color: var(--gold); font-weight: bold;">กำลังโหลด...</p>
+                    <p id="spdr-change" style="color: var(--neon-red);">-</p>
                 </div>
                 <div class="dashboard-section">
                     <h3>📈 มูลค่าตลาดโลก</h3>
-                    <p style="font-size: 1.8rem; color: var(--gold); font-weight: bold;">5,086.35 ล้าน$</p>
+                    <p id="spdr-market-value" style="font-size: 1.8rem; color: var(--gold); font-weight: bold;">-</p>
                     <p style="color: var(--text-muted);">SPDR Gold Shares (GLD)</p>
                 </div>
                 <div class="dashboard-section">
                     <h3>🕐 อัพเดทล่าสุด</h3>
-                    <p style="font-size: 1.2rem;">05:09 น. (ตามเวลาไทย)</p>
+                    <p id="spdr-updated-time" style="font-size: 1.2rem;">-</p>
                     <p style="color: var(--text-muted); font-size: 0.9rem;">แหล่งข้อมูล: traderider.com</p>
                 </div>
                 <div class="dashboard-section">
                     <h3>📅 สถิติปี 2026</h3>
-                    <p>ม.ค: +15.11 ตัน</p>
-                    <p>ก.พ: +14.23 ตัน</p>
-                    <p>มี.ค: -27.77 ตัน</p>
+                    <p>ม.ค: <span id="spdr-jan">+15.11</span> ตัน</p>
+                    <p>ก.พ: <span id="spdr-feb">+14.23</span> ตัน</p>
+                    <p>มี.ค: <span id="spdr-mar">-25.48</span> ตัน</p>
                 </div>
             </div>
         </section>
@@ -735,6 +735,50 @@
             catch (e) { console.log('Data not loaded'); }
         }
         loadBuildStatus(); loadSiteData(); setInterval(loadBuildStatus, 30000);
+        
+        // ================= SPDR GOLD DATA LOADER =================
+        async function loadSPDRData() {
+            try {
+                const response = await fetch('spdr-data.json');
+                const data = await response.json();
+                
+                // Format number with commas
+                const formatNumber = (num) => {
+                    return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                };
+                
+                // Update Holdings
+                document.getElementById('spdr-holdings').textContent = formatNumber(data.holdings) + ' ตัน';
+                
+                // Update Change with arrow
+                const changeEl = document.getElementById('spdr-change');
+                const changeValue = parseFloat(data.change);
+                if (changeValue >= 0) {
+                    changeEl.textContent = '+' + data.change + ' ตัน 📈 (วันนี้)';
+                    changeEl.style.color = 'var(--gold)';
+                } else {
+                    changeEl.textContent = data.change + ' ตัน 📉 (วันนี้)';
+                    changeEl.style.color = 'var(--neon-red)';
+                }
+                
+                // Update Market Value
+                document.getElementById('spdr-market-value').textContent = formatNumber(data.marketValue) + ' ล้าน$';
+                
+                // Update Time
+                document.getElementById('spdr-updated-time').textContent = data.updatedTime + ' น. (ตามเวลาไทย)';
+                
+                // Update Monthly Stats
+                if (data.monthly) {
+                    document.getElementById('spdr-jan').textContent = data.monthly['2026-01'] || '-';
+                    document.getElementById('spdr-feb').textContent = data.monthly['2026-02'] || '-';
+                    document.getElementById('spdr-mar').textContent = data.monthly['2026-03'] || '-';
+                }
+            } catch (e) {
+                console.error('SPDR Data Error:', e);
+                document.getElementById('spdr-holdings').textContent = 'ไม่สามารถโหลดข้อมูลได้';
+            }
+        }
+        loadSPDRData();
     </script>
     <style>@keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }</style>
 </body>
