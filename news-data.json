@@ -1,0 +1,40 @@
+{
+  "lastUpdate": "2026-03-15T22:30:00Z",
+  "aiNews": [
+    {
+      "title": "GPT-5.4 Series Released: Thinking Mode Redefined",
+      "summary": "OpenAI เปิดตัว GPT-5.4 ที่มาพร้อมกับความสามารถในการใช้เหตุผล (Reasoning) ระดับสูง และการเชื่อมต่อกับซอฟต์แวร์ที่ไร้รอยต่อมากขึ้น เหมาะสำหรับงาน Professional Workflows",
+      "url": "https://blog.mean.ceo/new-ai-model-releases-news-march-2026/",
+      "image": "https://img.freepik.com/free-photo/robot-hand-pointing-ai-technology-screen_53876-125067.jpg"
+    },
+    {
+      "title": "Claude Opus 4.6: Adaptive Thinking & Effort Controls",
+      "summary": "Anthropic อัปเกรด Claude Opus 4.6 ให้ผู้พัฒนาสามารถควบคุมความลึกในการคิด (Effort Control) เพื่อปรับสมดุลระหว่างความฉลาด ความเร็ว และต้นทุนได้",
+      "url": "https://www.nextwisi.com/blog/latest-advancements-in-ai-technology-in-2026",
+      "image": "https://img.freepik.com/free-vector/gradient-ai-logo-design_23-2151241150.jpg"
+    },
+    {
+      "title": "Nvidia Vera Rubin Platform: Trillion-Parameter Focus",
+      "summary": "Nvidia เผยโฉมแพลตฟอร์ม 'Vera Rubin' พร้อมจีพียู H300 ตั้งเป้าประมวลผลโมเดลระดับล้านล้านพารามิเตอร์ เตรียมส่งมอบช่วงครึ่งหลังของปี 2026",
+      "url": "https://www.fool.com/investing/2026/03/15/should-nvidia-be-worried-meta-platforms-ai-chips/",
+      "image": "https://img.freepik.com/free-photo/high-angle-electronics-chip_23-2148842934.jpg"
+    }
+  ],
+  "cityNews": [
+    {
+      "title": "ความตึงเครียดสหรัฐฯ-อิหร่าน ส่งผลราคาน้ำมันพุ่งทะลุ $100",
+      "summary": "สถานการณ์ในตะวันออกกลางทวีความรุนแรงขึ้น กระทบต่อความเชื่อมั่นในตลาดโลก และกดดันราคาทองคำในฐานะสินทรัพย์ปลอดภัยที่เริ่มถูกแย่งชิงโดยดอลลาร์"
+    },
+    {
+      "title": "เงินบาทอ่อนค่าแตะ 32.5 ช่วยพยุงราคาทองในประเทศ",
+      "summary": "แม้ราคาทองโลกจะย่อตัวลงแต่เงินบาทที่อ่อนค่าลงช่วยให้ราคาทองคำแท่งในไทยยังทรงตัวอยู่ในระดับสูงที่ 77,000+ บาท"
+    }
+  ],
+  "systemStats": {
+    "gatewayStatus": "Online",
+    "gatewayCount": 2,
+    "uptime": "1 day, 23:45",
+    "ramUsage": "1.4Gi / 3.6Gi",
+    "version": "2026.3.13"
+  }
+}

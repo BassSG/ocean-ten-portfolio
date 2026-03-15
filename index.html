@@ -198,6 +198,12 @@
         .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .keyword-tag { background: rgba(139, 0, 0, 0.4); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.9rem; border: 1px solid var(--primary-red); letter-spacing: 0.5px; }
 
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+        .news-item { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--primary-red); }
+        .news-item h4 { color: var(--gold); margin-bottom: 5px; font-size: 1rem; }
+        .news-item p { font-size: 0.85rem !important; color: #ccc !important; }
+        .news-item img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
+        
         /* ================= RESPONSIVE SMART NAVIGATION ================= */
         @media (max-width: 768px) {
             body { padding-bottom: calc(var(--nav-height-mobile) + 20px); } /* Space for bottom nav */
@@ -245,6 +251,9 @@
         </a>
         <a href="#section-spdr" class="nav-item" data-target="section-spdr">
             <span class="nav-icon">🥇</span><span class="nav-text">SPDR</span>
+        </a>
+        <a href="#section-news" class="nav-item" data-target="section-news">
+            <span class="nav-icon">📰</span><span class="nav-text">Insights</span>
         </a>
         <a href="#section-active" class="nav-item" data-target="section-active">
             <span class="nav-icon">🔥</span><span class="nav-text">Active</span>
@@ -317,6 +326,34 @@
                     <p>ม.ค: <span id="spdr-jan">+15.11</span> ตัน</p>
                     <p>ก.พ: <span id="spdr-feb">+14.23</span> ตัน</p>
                     <p>มี.ค: <span id="spdr-mar">-25.48</span> ตัน</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-news" class="reveal scroll-section">
+            <h2><span style="font-size:1.2em">📰</span> Daily Insights & News</h2>
+            <div class="grid">
+                <div class="dashboard-section" style="grid-column: 1 / -1;">
+                    <h3>🐋 AI & Tech Trends (Mastermind Scout)</h3>
+                    <div id="ai-news-container" class="news-grid">
+                        <p style="color: var(--text-muted);">กำลังรวบรวมเทรนด์ AI ล่าสุด...</p>
+                    </div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>🦑 City News & Economy (Deep Dive)</h3>
+                    <div id="city-news-container">
+                        <p style="color: var(--text-muted);">กำลังสรุปข่าวเด่น...</p>
+                    </div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>🦀 System Health Check</h3>
+                    <table class="modal-table">
+                        <tr><td>Gateway Status</td><td id="sys-gateway-status">Online</td></tr>
+                        <tr><td>Immortal Ranks</td><td id="sys-gateway-count">2 Active</td></tr>
+                        <tr><td>RAM Usage</td><td id="sys-ram">Checking...</td></tr>
+                        <tr><td>Uptime</td><td id="sys-uptime">-</td></tr>
+                        <tr><td>Version</td><td id="sys-version">v2026.3.13</td></tr>
+                    </table>
                 </div>
             </div>
         </section>
@@ -779,6 +816,45 @@
             }
         }
         loadSPDRData();
+
+        // ================= INSIGHTS DATA LOADER =================
+        async function loadNewsData() {
+            try {
+                const response = await fetch('news-data.json');
+                const data = await response.json();
+                
+                const aiContainer = document.getElementById('ai-news-container');
+                aiContainer.innerHTML = '';
+                if (data.aiNews.length > 0) {
+                    data.aiNews.forEach(item => {
+                        aiContainer.innerHTML += `
+                            <div class="news-item">
+                                ${item.image ? `<img src="${item.image}" alt="news">` : ''}
+                                <h4>${item.title}</h4>
+                                <p>${item.summary}</p>
+                                <a href="${item.url}" target="_blank" style="color:var(--primary-red); font-size:0.8rem; text-decoration:none;">Read More →</a>
+                            </div>
+                        `;
+                    });
+                } else { aiContainer.innerHTML = '<p style="color: var(--text-muted);">วันนี้ยังไม่มีอัปเดตเทรนด์ AI ใหม่ๆ ค่ะ</p>'; }
+
+                const cityContainer = document.getElementById('city-news-container');
+                cityContainer.innerHTML = '';
+                if (data.cityNews.length > 0) {
+                    data.cityNews.forEach(item => {
+                        cityContainer.innerHTML += `<div class="news-item" style="margin-bottom:10px;"><h4>${item.title}</h4><p>${item.summary}</p></div>`;
+                    });
+                } else { cityContainer.innerHTML = '<p style="color: var(--text-muted);">สถานการณ์บ้านเมืองปกติสุขดีค่ะ</p>'; }
+
+                document.getElementById('sys-gateway-status').textContent = data.systemStats.gatewayStatus;
+                document.getElementById('sys-gateway-count').textContent = data.systemStats.gatewayCount + ' Active (Immortal)';
+                document.getElementById('sys-ram').textContent = data.systemStats.ramUsage;
+                document.getElementById('sys-uptime').textContent = data.systemStats.uptime;
+                document.getElementById('sys-version').textContent = data.systemStats.version;
+
+            } catch (e) { console.error('News Data Error:', e); }
+        }
+        loadNewsData();
     </script>
     <style>@keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }</style>
 </body>
