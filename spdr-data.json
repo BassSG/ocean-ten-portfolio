@@ -1,12 +1,12 @@
 {
-  "lastUpdate": "2026-03-20T09:07:45.376406",
-  "holdings": null,
-  "change": null,
+  "lastUpdate": "2026-03-23T09:20:03.504446",
+  "holdings": "1,056.99",
+  "change": "-5.14",
   "marketValue": null,
-  "updatedTime": null,
+  "updatedTime": "05:06",
   "monthly": {
     "2026-01": "+15.11",
     "2026-02": "+14.23",
-    "2026-03": "-39.2"
+    "2026-03": "-44.34"
   }
 }
